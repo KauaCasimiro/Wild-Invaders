@@ -1,24 +1,37 @@
 package monkeysdynamite.wildinvaders;
 
+import monkeysdynamite.wildinvaders.config.GameConfig;
+import monkeysdynamite.wildinvaders.hud.MobileHud;
 import com.badlogic.gdx.Screen;
+
 
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
+    private MobileHud mobile;
     @Override
     public void show() {
-        // Prepare your screen here.
+        if (GameConfig.isMobile) {
+            mobile = new MobileHud();
+        }
     }
 
     @Override
     public void render(float delta) {
-        // Draw your screen here. "delta" is the time since last render in seconds.
+        if (mobile != null) {
+            mobile.render();
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        // If the window is minimized on a desktop (LWJGL3) platform, width and height are 0, which causes problems.
-        // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
-        if(width <= 0 || height <= 0) return;
+
+        if(width <= 0 || height <= 0) {
+            return;
+        }
+
+        if (mobile != null) {
+            mobile.resize();
+        }
 
         // Resize your screen here. The parameters represent the new window size.
     }
@@ -40,6 +53,8 @@ public class FirstScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Destroy screen's assets here.
+        if (mobile != null) {
+            mobile.dispose();
+        }
     }
 }
