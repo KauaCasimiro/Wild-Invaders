@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class MobileHud {
 
+    public boolean isLeftPressed;
+    public boolean isRightPressed;
     private ShapeRenderer shapeRenderer;
 
     //area of buttons (x, y, size)
@@ -17,6 +19,7 @@ public class MobileHud {
 
         resize();
     }
+
 
     public void resize() {
         float w = Gdx.graphics.getWidth();
@@ -47,6 +50,30 @@ public class MobileHud {
         shapeRenderer.rect(rightx, righty, size, size);
 
         shapeRenderer.end();
+    }
+
+    public void update() {
+        isLeftPressed = false;
+        isRightPressed = false;
+
+        if (Gdx.input.isTouched()) {
+            float x = Gdx.input.getX();
+            float y = Gdx.input.getY();
+
+            // In the LibGDX: the origin is top, HUD is base -> invert y
+            float h = Gdx.graphics.getHeight();
+            y = h - y;
+
+            //check left button
+            if (x >= leftx && x <= leftx + size && y >= lefty && y <= lefty + size) {
+                isLeftPressed = true;
+            }
+
+            //check right button
+            if (x >= rightx && x <= rightx + size && y >= righty && y <= righty + size) {
+                isRightPressed = true;
+            }
+        }
     }
 
     public void dispose() {
