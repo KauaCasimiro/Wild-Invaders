@@ -8,11 +8,13 @@ public class MobileHud {
 
     public boolean isLeftPressed;
     public boolean isRightPressed;
+    public boolean isShootJustPreesed;
     private ShapeRenderer shapeRenderer;
 
     //area of buttons (x, y, size)
     private float leftx, lefty, size;
     private float rightx, righty;
+    private float shootx, shooty;
 
     public MobileHud() {
         shapeRenderer = new ShapeRenderer();
@@ -35,7 +37,9 @@ public class MobileHud {
         rightx = w - size - (w * 0.05f);
         righty = h * 0.08f;
 
-        //future shoot button
+        //shoot button
+        shootx = rightx;
+        shooty = h * 0.18f;
     }
 
     public void render() {
@@ -49,12 +53,17 @@ public class MobileHud {
         shapeRenderer.setColor(Color.DARK_GRAY);
         shapeRenderer.rect(rightx, righty, size, size);
 
+        //shoot button
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(shootx, shooty, size, size);
+
         shapeRenderer.end();
     }
 
     public void update() {
         isLeftPressed = false;
         isRightPressed = false;
+        isShootJustPreesed = false;
 
         if (Gdx.input.isTouched()) {
             float x = Gdx.input.getX();
@@ -72,6 +81,10 @@ public class MobileHud {
             //check right button
             if (x >= rightx && x <= rightx + size && y >= righty && y <= righty + size) {
                 isRightPressed = true;
+            }
+
+            if (x >= shootx && x <= shootx + size && y >= shooty && y <= shooty + size) {
+                isShootJustPreesed = true;
             }
         }
     }

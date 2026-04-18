@@ -1,15 +1,15 @@
 package monkeysdynamite.wildinvaders.controllers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-
 public class Controllers {
     public boolean left;
     public boolean right;
+    public boolean shoot;
 
 
-    public void update(boolean keyLeft, boolean keyRight, boolean buttonLeft, boolean buttonRight) {
-        left = keyLeft || buttonLeft;
-        right = keyRight || buttonRight;
+    public void update(boolean left, boolean right, boolean shoot) {
+        this.left = left;
+        this.right = right;
+        this.shoot = shoot;
     }
 }
+

@@ -25,6 +25,14 @@ public class Player {
         }
     }
 
+    public float getX() {
+        return nave.x;
+    }
+
+    public float getY() {
+        return nave.y;
+    }
+
     public void render(SpriteBatch batch) {
         batch.draw(naveImagem, nave.x, nave.y,  nave.width, nave.height);
     }

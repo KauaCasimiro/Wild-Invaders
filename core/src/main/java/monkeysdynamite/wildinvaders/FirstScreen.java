@@ -1,32 +1,34 @@
 package monkeysdynamite.wildinvaders;
 
+//Imports LibGDX
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import monkeysdynamite.wildinvaders.config.GameConfig;
-import monkeysdynamite.wildinvaders.controllers.Controllers;
-import monkeysdynamite.wildinvaders.entities.Player;
-import monkeysdynamite.wildinvaders.hud.MobileHud;
 import com.badlogic.gdx.Screen;
+
+//Imports packages
+import monkeysdynamite.wildinvaders.config.GameConfig;
+import monkeysdynamite.wildinvaders.game.GameController;
+import monkeysdynamite.wildinvaders.hud.MobileHud;
+
 
 
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
     private MobileHud mobile;
-    private Controllers controllers;
-    private Player player;
+    private GameController gameController;
     private OrthographicCamera camera;
-
     private SpriteBatch batch;
+
 
     @Override
     public void show() {
-        controllers = new Controllers();
-        player = new Player(200.0f, 10.0f, 100.0f, 100.0f);
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
+
+        gameController = new GameController();
 
         if (GameConfig.isMobile) {
             mobile = new MobileHud();
@@ -36,33 +38,38 @@ public class FirstScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //Input Keys
+
+        //----- INPUT DESKTOP -----
         boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.A);
         boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.D);
+        boolean keyShoot = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
 
-        //Input buttons
+        //----- INPUT MOBILE -----
         boolean buttonLeft = false;
         boolean buttonRight = false;
+        boolean buttonShoot = false;
 
         if (mobile != null) {
             mobile.update();
             buttonLeft = mobile.isLeftPressed;
             buttonRight = mobile.isRightPressed;
+            buttonShoot = mobile.isShootJustPreesed;
         }
 
-        //Unify in the class Controllers
-        controllers.update(keyLeft, keyRight, buttonLeft, buttonRight);
+        //-----UNIFY INPUT-----
+        boolean left = keyLeft || buttonLeft;
+        boolean right = keyRight || buttonRight;
+        boolean shoot = keyShoot || buttonShoot;
 
-        player.updateMovement(controllers);
+        gameController.update(left, right, shoot);
+
+        batch.begin();
+        gameController.render(batch);
+        batch.end();
 
         if (mobile != null) {
             mobile.render();
         }
-
-        batch.begin();
-        player.render(batch);
-        batch.end();
-
     }
 
     @Override
@@ -99,6 +106,5 @@ public class FirstScreen implements Screen {
         if (mobile != null) {
             mobile.dispose();
         }
-        player.dispose();
     }
 }
