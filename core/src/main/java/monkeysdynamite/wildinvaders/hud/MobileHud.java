@@ -39,7 +39,7 @@ public class MobileHud {
 
         //shoot button
         shootx = rightx;
-        shooty = h * 0.18f;
+        shooty = h * 0.50f;
     }
 
     public void render() {
