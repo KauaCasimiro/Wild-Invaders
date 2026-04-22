@@ -12,4 +12,9 @@ public class GameConfig {
 
         isMobile = (type == Application.ApplicationType.Android);
     }
+
+    public static class WorldConfig {
+        public static final float WORLD_WIDTH = 960;
+        public static final float WORLD_HEIGHT = 540;
+    }
 }
