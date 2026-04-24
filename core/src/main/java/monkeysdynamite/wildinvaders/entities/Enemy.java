@@ -16,20 +16,45 @@ public class Enemy {
     private Sprite sprite;
     private Rectangle bounds;
 
-    public Enemy (float x, float y) {
+    private EnemyType  type;
+
+    private static Texture tractorTexture;
+    private static Texture farmerTexture;
+    private static Texture minerTexture;
+
+    public enum EnemyType {
+        TRACTOR,
+        FARMER,
+        MINER
+    }
+
+    public Enemy (float x, float y, EnemyType type) {
         this.x = x;
         this.y = y;
+        this.type = type;
 
         this.width = 64;
         this.height = 64;
 
         this.isAlive = true;
 
-        if (texture == null) {
-            texture = new Texture(Gdx.files.internal("player/trator.png"));
+        if (tractorTexture == null) {
+            tractorTexture = new Texture(Gdx.files.internal("enemies/trator.png"));
+            farmerTexture = new Texture(Gdx.files.internal("enemies/fazendeiro.png"));
+            minerTexture = new Texture(Gdx.files.internal("enemies/garimpeiro.png"));
         }
 
-        sprite = new Sprite(texture);
+        switch (type) {
+            case TRACTOR:
+                sprite = new Sprite(tractorTexture);
+            break;
+            case FARMER:
+                sprite = new Sprite(farmerTexture);
+            break;
+            case MINER:
+                sprite = new Sprite(minerTexture);
+            break;
+        }
 
         bounds = new Rectangle(x, y, width, height);
     }
@@ -58,9 +83,29 @@ public class Enemy {
     public Rectangle getBounds() {
         return bounds;
     }
+
+    public EnemyType getType() {
+        return type;
+    }
+
+    public Projectile.ProjectileType getProjectileType() {
+        switch (type) {
+            case FARMER:
+                return Projectile.ProjectileType.BULLET;
+
+            case MINER:
+                return Projectile.ProjectileType.PICKAXE;
+
+            default:
+                return Projectile.ProjectileType.BULLET;
+        }
+    }
+
     public void update() {
         bounds.setPosition(x, y);
     }
+
+
 
     public static void disposeShared() {
         if (texture != null) {

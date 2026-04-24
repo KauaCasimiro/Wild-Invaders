@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import monkeysdynamite.wildinvaders.controllers.Controllers;
-import monkeysdynamite.wildinvaders.entities.Dynamite;
 import monkeysdynamite.wildinvaders.entities.Player;
 import monkeysdynamite.wildinvaders.entities.Enemy;
+import monkeysdynamite.wildinvaders.entities.Enemy.EnemyType;
 import monkeysdynamite.wildinvaders.config.GameConfig;
+import monkeysdynamite.wildinvaders.entities.Projectile;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,27 +16,34 @@ import java.util.Iterator;
 public class GameController {
     private Controllers controllers;
     private Player player;
-    private Dynamite dynamite;
-    private  boolean canShoot;
+
+    private ArrayList <Projectile> projectiles;
+
+    private boolean hasDynamite;
 
     private ArrayList <Enemy> enemies;
 
     private float formationSpeed = 50.0f;
     private int direction = 1;
 
+    private float enemyShootTimer = 0;
+    private float enemyShootCooldown = 1.0f;
+    private int maxEnemyProjectiles = 3;
+
 
     public GameController() {
         controllers = new Controllers();
-        player = new Player(400.0f, 10.0f, 64.0f, 64.0f);
+        player = new Player(400.0f, 10.0f, 80.0f, 80.0f);
+        projectiles = new ArrayList<>();
 
         enemies = new ArrayList<>();
 
         int rows = 6;
-        int cols = 9;
+        int cols = 11;
         int spacingX = 80;
         int spacingY = 60;
-        float starX = 100;
-        float starY = 180;
+        float starX = 50;
+        float starY = 400;
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
@@ -43,19 +51,23 @@ public class GameController {
                 float x =  starX + col * spacingX;
                 float y = starY + row * spacingY;
 
-                enemies.add(new Enemy(x, y));
+                Enemy.EnemyType type;
+
+                if (row < 2) {
+                    type = Enemy.EnemyType.TRACTOR;
+                } else if (row < 4) {
+                    type = Enemy.EnemyType.FARMER;
+                } else {
+                    type = Enemy.EnemyType.MINER;
+                }
+
+                enemies.add(new Enemy(x, y, type));
             }
         }
-
-        canShoot = true;
     }
 
     public ArrayList<Enemy> getEnemies() {
         return enemies;
-    }
-
-    public Dynamite getDynamite() {
-        return dynamite;
     }
 
     public void update(boolean left, boolean right, boolean shoot) {
@@ -91,42 +103,98 @@ public class GameController {
             enemy.update();
         }
 
+        enemyShootTimer += delta;
 
-        //-----SHOOT-----
-        if (shoot && canShoot) {
-            dynamite = new Dynamite(player.getX(), player.getY());
-            //System.out.println("DYNAMITE SPAWNED at X: " + dynamite.x + " Y: " + dynamite.y);
-
-            canShoot = false;
+        if (enemyShootTimer >= enemyShootCooldown) {
+            tryEnemyShoot();
+            enemyShootTimer = 0;
         }
 
-        //-----UPDATE DYNAMITE-----
-        if (dynamite != null) {
-            dynamite.update(delta);
+        int enemyShots = 0;
 
-            if (!dynamite.isActive) {
-                //System.out.println("DYNAMITE DESTROYED at X: " + dynamite.x + " Y: " + dynamite.y);
-                dynamite = null;
-                canShoot = true;
+        for (Projectile p : projectiles) {
+            if (p.getType() != Projectile.ProjectileType.DYNAMITE  && p.isActive) {
+                enemyShots++;
             }
         }
 
-        //-----CHECK COLLISON-----
-        if (dynamite != null && dynamite.isActive) {
 
-            for (Enemy enemy : enemies) {
+        //-----SHOOT-----
+        hasDynamite = false;
 
-                if (!dynamite.isActive) {
-                    continue;
-                }
-                if (dynamite.getBounds().overlaps(enemy.getBounds())) {
+        for (Projectile p : projectiles) {
+            if (p.getType() ==  Projectile.ProjectileType.DYNAMITE && p.isActive) {
+                hasDynamite = true;
+                break;
+            }
+        }
+
+        if (shoot && !hasDynamite) {
+            projectiles.add(new Projectile(player.getX(), player.getY(), Projectile.ProjectileType.DYNAMITE));
+            //System.out.println("DYNAMITE SPAWNED at X: " + dynamite.x + " Y: " + dynamite.y);
+
+            hasDynamite = false;
+        }
+
+        //-----UPDATE DYNAMITE-----
+        for (Projectile p : projectiles) {
+            p.update(delta);
+        }
+
+        //-----CHECK COLLISON WITH ENEMIES-----
+        for (Projectile p : projectiles) {
+
+            if (p.getType() != Projectile.ProjectileType.DYNAMITE) {
+                continue;
+            }
+
+            if (!p.isActive) {
+                continue;
+            }
+
+            for (Enemy enemy :  enemies) {
+                if (p.getBounds().overlaps(enemy.getBounds())) {
                     enemy.isAlive = false;
-                    dynamite.isActive = false;
-                    dynamite = null;
-                    canShoot = true;
-                    //System.out.println("HIT at X: " + enemy.x + " Y: " + enemy.y);
+                    p.isActive = false;
                     break;
                 }
+            }
+        }
+
+        for (Projectile p : projectiles) {
+
+            if (!p.isActive) {
+                continue;
+            }
+
+            if (p.getType() == Projectile.ProjectileType.DYNAMITE) {
+                continue;
+            }
+
+            /*System.out.println(
+                "PLAYER -> x: " + player.getBounds().x +
+                    " y: " + player.getBounds().y
+            );*/
+
+            if (p.getBounds().overlaps(player.getBounds())) {
+                /*System.out.println(
+                    "COLLISION CHECK -> type: " + p.getType() +
+                        " active: " + p.isActive +
+                        " x: " + p.getBounds().x +
+                        " y: " + p.getBounds().y
+                );*/
+                player.isAlive = false;
+                p.isActive = false;
+                break;
+            }
+        }
+
+        //-----REMOVE PROJECTILES-----
+        Iterator<Projectile> iterator = projectiles.iterator();
+        while (iterator.hasNext()) {
+            Projectile p = iterator.next();
+            if (!p.isActive) {
+                iterator.remove();
             }
         }
 
@@ -145,7 +213,43 @@ public class GameController {
        //System.out.println("ENEMIES ALIVE: " + enemies.size());
     }
 
+    private void tryEnemyShoot() {
+        int enemyShots = 0;
 
+        for  (Projectile p : projectiles) {
+            if (p.getType() != Projectile.ProjectileType.DYNAMITE && p.isActive) {
+                enemyShots++;
+            }
+        }
+
+        if (enemyShots >= maxEnemyProjectiles) {
+            return;
+        }
+
+        ArrayList<Enemy> aliveEnemies = new ArrayList<>();
+
+        for (Enemy e: enemies) {
+            if (e.isAlive) {
+                aliveEnemies.add(e);
+            }
+        }
+
+        if (aliveEnemies.isEmpty()) {
+            return;
+        }
+
+        int index = (int)(Math.random() * aliveEnemies.size());
+        Enemy shooter = aliveEnemies.get(index);
+
+        Projectile.ProjectileType type = shooter.getProjectileType();
+
+        projectiles.add(new Projectile(shooter.x, shooter.y, type));
+
+    }
+
+    public ArrayList<Projectile> getProjectiles() {
+        return projectiles;
+    }
 
     public void render(SpriteBatch batch) {
 
@@ -154,19 +258,16 @@ public class GameController {
             enemy.render(batch);
         }
 
-        if (dynamite != null) {
-            dynamite.render(batch);
+        for (Projectile p : projectiles) {
+            p.render(batch);
         }
     }
 
     public void dispose() {
         player.dispose();
 
-        if (dynamite != null && dynamite.isActive) {
-            dynamite.dispose();
-        }
-
         Enemy.disposeShared();
+        Projectile.disposeShared();
 
     }
 

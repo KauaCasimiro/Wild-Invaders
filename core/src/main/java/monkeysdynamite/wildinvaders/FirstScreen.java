@@ -14,9 +14,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 //Imports packages
 import monkeysdynamite.wildinvaders.config.GameConfig;
 import monkeysdynamite.wildinvaders.entities.Enemy;
+import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameController;
 import monkeysdynamite.wildinvaders.hud.MobileHud;
-import monkeysdynamite.wildinvaders.entities.Dynamite;
 
 
 
@@ -40,15 +40,21 @@ public class FirstScreen implements Screen {
 
         camera.position.set(GameConfig.WorldConfig.WORLD_WIDTH / 2f, GameConfig.WorldConfig.WORLD_HEIGHT / 2f, 0);
 
+        if (GameConfig.isMobile) {
+            mobile = new MobileHud();
+            camera.zoom = 1.2f;
+        } else {
+            camera.zoom = 1.2f;
+        }
+
+        camera.update();
+
         batch = new SpriteBatch();
 
         shapeRenderer = new ShapeRenderer();
 
         gameController = new GameController();
 
-        if (GameConfig.isMobile) {
-            mobile = new MobileHud();
-        }
     }
 
     @Override
@@ -100,13 +106,12 @@ public class FirstScreen implements Screen {
         }
 
 // desenhar dynamite
-        if (gameController.getDynamite() != null) {
-            var d = gameController.getDynamite();
+        for (Projectile p : gameController.getProjectiles()) {
             shapeRenderer.rect(
-                d.getBounds().x,
-                d.getBounds().y,
-                d.getBounds().width,
-                d.getBounds().height
+                p.getBounds().x,
+                p.getBounds().y,
+                p.getBounds().width,
+                p.getBounds().height
             );
         }
 

@@ -7,12 +7,18 @@ import com.badlogic.gdx.Gdx;
 import monkeysdynamite.wildinvaders.controllers.Controllers;
 
 public class Player {
-    private Texture naveImagem;
+    private Texture texture;
     private Rectangle nave;
 
+    private Rectangle bounds;
+
+    public boolean isAlive;
+
     public Player(float x, float y, float width, float height) {
-        naveImagem = new Texture(Gdx.files.internal("player/nave.png"));
+        texture = new Texture(Gdx.files.internal("player/george_idle_1.png"));
         nave = new Rectangle(x, y, width, height);
+        bounds = new Rectangle(x, y, width, height);
+        this.isAlive = true;
         //nave.setSize(width, height);
     }
 
@@ -23,6 +29,8 @@ public class Player {
         if (controllers.right) {
             nave.x += 200 * Gdx.graphics.getDeltaTime();
         }
+
+        bounds.setPosition(nave.x, nave.y);
     }
 
     public float getX() {
@@ -33,12 +41,20 @@ public class Player {
         return nave.y;
     }
 
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
     public void render(SpriteBatch batch) {
-        batch.draw(naveImagem, nave.x, nave.y,  nave.width, nave.height);
+        if (!isAlive) {
+            return;
+        }
+
+        batch.draw(texture, nave.x, nave.y,  nave.width, nave.height);
     }
 
     public void dispose() {
-        naveImagem.dispose();
+        texture.dispose();
     }
 
 }
