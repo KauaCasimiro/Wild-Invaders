@@ -14,7 +14,7 @@ public class GameConfig {
     }
 
     public static class WorldConfig {
-        public static final float WORLD_WIDTH = 960;
-        public static final float WORLD_HEIGHT = 540;
+        public static final float WORLD_WIDTH = 1280;
+        public static final float WORLD_HEIGHT = 720;
     }
 }
