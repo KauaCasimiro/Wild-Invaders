@@ -8,14 +8,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 //Imports packages
+import monkeysdynamite.wildinvaders.config.GameCamera;
 import monkeysdynamite.wildinvaders.config.GameConfig;
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameController;
+import monkeysdynamite.wildinvaders.hud.HudCamera;
 import monkeysdynamite.wildinvaders.hud.MobileHud;
 
 
@@ -24,30 +24,23 @@ import monkeysdynamite.wildinvaders.hud.MobileHud;
 public class FirstScreen implements Screen {
     private MobileHud mobile;
     private GameController gameController;
-    private OrthographicCamera camera;
-    private Viewport viewport;
     private SpriteBatch batch;
 
     private ShapeRenderer shapeRenderer;
 
+    private GameCamera gameCamera;
+    private HudCamera hudCamera;
+
 
     @Override
     public void show() {
-        camera = new OrthographicCamera();
+        gameCamera = new GameCamera(GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.WorldConfig.WORLD_HEIGHT);
+        hudCamera = new HudCamera(GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.WorldConfig.WORLD_HEIGHT);
 
-        viewport = new FitViewport(GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.WorldConfig.WORLD_HEIGHT, camera);
-        viewport.apply();
-
-        camera.position.set(GameConfig.WorldConfig.WORLD_WIDTH / 2f, GameConfig.WorldConfig.WORLD_HEIGHT / 2f, 0);
 
         if (GameConfig.isMobile) {
             mobile = new MobileHud();
-            camera.zoom = 1.2f;
-        } else {
-            camera.zoom = 1.2f;
         }
-
-        camera.update();
 
         batch = new SpriteBatch();
 
@@ -85,17 +78,57 @@ public class FirstScreen implements Screen {
 
         gameController.update(left, right, shoot);
 
-        shapeRenderer.setProjectionMatrix(camera.combined);
+        gameCamera.apply();
+        System.out.println("----- DEBUG -----");
 
-        batch.setProjectionMatrix(camera.combined);
+// Tamanho da janela (window mode)
+        System.out.println("Window: "
+            + Gdx.graphics.getWidth() + " x "
+            + Gdx.graphics.getHeight());
+
+// Tamanho real do backbuffer (fullscreen / monitor)
+        System.out.println("BackBuffer: "
+            + Gdx.graphics.getBackBufferWidth() + " x "
+            + Gdx.graphics.getBackBufferHeight());
+
+// Viewport (mundo lógico)
+        System.out.println("World (viewport): "
+            + GameConfig.WorldConfig.WORLD_WIDTH + " x "
+            + GameConfig.WorldConfig.WORLD_HEIGHT);
+
+// Área real usada pela viewport na tela
+        System.out.println("ScreenViewport area: "
+            + gameCamera.getCamera().viewportWidth + " x "
+            + gameCamera.getCamera().viewportHeight);
+
+// Posição da câmera
+        System.out.println("Camera pos: "
+            + gameCamera.getCamera().position.x + ", "
+            + gameCamera.getCamera().position.y);
+
+        System.out.println("------------------");
+        batch.setProjectionMatrix(gameCamera.getCamera().combined);
+
 
         batch.begin();
         gameController.render(batch);
         batch.end();
 
+        shapeRenderer.setProjectionMatrix(gameCamera.getCamera().combined);
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-// desenhar enemies
+        OrthographicCamera cam = gameCamera.getCamera();
+
+        float worldWidth = GameConfig.WorldConfig.WORLD_WIDTH;
+        float worldHeight = GameConfig.WorldConfig.WORLD_HEIGHT;
+
+        float x = 0;
+        float y = 0;
+
+        shapeRenderer.rect(x, y, worldWidth, worldHeight);
+
+        // desenhar enemies
         for (Enemy enemy : gameController.getEnemies()) {
             shapeRenderer.rect(
                 enemy.getBounds().x,
@@ -105,7 +138,7 @@ public class FirstScreen implements Screen {
             );
         }
 
-// desenhar dynamite
+        // desenhar dynamite
         for (Projectile p : gameController.getProjectiles()) {
             shapeRenderer.rect(
                 p.getBounds().x,
@@ -116,6 +149,30 @@ public class FirstScreen implements Screen {
         }
 
         shapeRenderer.end();
+
+        hudCamera.apply();
+        batch.setProjectionMatrix(hudCamera.getCamera().combined);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        // HUD TOPO
+        shapeRenderer.rect(
+            0,
+            GameConfig.WorldConfig.WORLD_HEIGHT - GameConfig.HudConfig.HUD_TOP_HEIGHT,
+            GameConfig.WorldConfig.WORLD_WIDTH,
+            GameConfig.HudConfig.HUD_TOP_HEIGHT
+        );
+
+        // HUD BASE
+        shapeRenderer.rect(
+            0,
+            0,
+            GameConfig.WorldConfig.WORLD_WIDTH,
+            GameConfig.HudConfig.HUD_BOTTOM_HEIGHT
+        );
+
+        shapeRenderer.end();
+
 
         if (mobile != null) {
             mobile.render();
@@ -133,7 +190,8 @@ public class FirstScreen implements Screen {
             mobile.resize();
         }
 
-        viewport.update(width, height);
+        gameCamera.resize(width, height);
+        hudCamera.resize(width, height);
         // Resize your screen here. The parameters represent the new window size.
     }
 

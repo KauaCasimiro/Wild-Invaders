@@ -33,8 +33,8 @@ public class Enemy {
         this.y = y;
         this.type = type;
 
-        this.width = 64;
-        this.height = 64;
+        this.width = 48;
+        this.height = 48;
 
         this.isAlive = true;
 

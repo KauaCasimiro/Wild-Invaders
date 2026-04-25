@@ -33,17 +33,17 @@ public class GameController {
 
     public GameController() {
         controllers = new Controllers();
-        player = new Player(400.0f, 10.0f, 80.0f, 80.0f);
+        player = new Player(400.0f, GameConfig.GameArea.GAME_MIN_Y + 20, 48.0f, 48.0f);
         projectiles = new ArrayList<>();
 
         enemies = new ArrayList<>();
 
         int rows = 6;
         int cols = 11;
-        int spacingX = 80;
-        int spacingY = 60;
+        int spacingX = 56;
+        int spacingY = 48;
         float starX = 50;
-        float starY = 400;
+        float starY = GameConfig.GameArea.GAME_MIN_Y + 200;
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
