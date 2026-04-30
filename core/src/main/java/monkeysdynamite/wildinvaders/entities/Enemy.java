@@ -22,6 +22,9 @@ public class Enemy {
     private static Texture farmerTexture;
     private static Texture minerTexture;
 
+    public int rowIndex;
+    public int columnIndex;
+
     public enum EnemyType {
         TRACTOR,
         FARMER,

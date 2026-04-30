@@ -1,3 +1,9 @@
+/*
+* AVISO, REFATORA TUDO ISSO AQUI, TRANSFORMA TUDO EM CLASSES E MÉTODOS SE FOR NECESSÁRIO
+* TENHA UTILIZAR A LÓGICA DE SCRIPTS DO GAMEMAKER, SÓ TIRA ESSE TANTO DE COISA DO GAME CONTROLLER
+* VOLTA A COMENTAR AS COISAS, O CÓDIGO TA PODRE E CONFUSO
+* */
+
 package monkeysdynamite.wildinvaders.game;
 
 import com.badlogic.gdx.Gdx;
@@ -61,7 +67,11 @@ public class GameController {
                     type = Enemy.EnemyType.MINER;
                 }
 
-                enemies.add(new Enemy(x, y, type));
+                Enemy enemy = new Enemy(x, y, type);
+                enemy.rowIndex = row;
+                enemy.columnIndex = col;
+
+                enemies.add(enemy);
             }
         }
     }
@@ -129,8 +139,9 @@ public class GameController {
             }
         }
 
+        float snappedX = 50 + Math.round((player.getX() - 50) / 56f) * 56f;
         if (shoot && !hasDynamite) {
-            projectiles.add(new Projectile(player.getX(), player.getY(), Projectile.ProjectileType.DYNAMITE));
+            projectiles.add(new Projectile(snappedX, player.getY(), Projectile.ProjectileType.DYNAMITE));
             //System.out.println("DYNAMITE SPAWNED at X: " + dynamite.x + " Y: " + dynamite.y);
 
             hasDynamite = false;
@@ -142,6 +153,7 @@ public class GameController {
         }
 
         //-----CHECK COLLISON WITH ENEMIES-----
+        //float tolerance = 20f;
         for (Projectile p : projectiles) {
 
             if (p.getType() != Projectile.ProjectileType.DYNAMITE) {
@@ -152,15 +164,26 @@ public class GameController {
                 continue;
             }
 
-            for (Enemy enemy :  enemies) {
-                if (p.getBounds().overlaps(enemy.getBounds())) {
-                    enemy.isAlive = false;
-                    p.isActive = false;
-                    break;
+           Enemy targetEnemy = null;
+
+            for (Enemy enemy : enemies) {
+                if (!enemy.isAlive) {
+                    continue;
                 }
+                    if (p.getBounds().overlaps(enemy.getBounds())) {
+                        if (targetEnemy == null || enemy.y < targetEnemy.y) {
+                            targetEnemy = enemy;
+                        }
+                    }
+            }
+
+            if (targetEnemy != null) {
+                    targetEnemy.isAlive = false;
+                    p.isActive = false;
             }
         }
 
+        //-----CHECK COLLISON WITH PLAYER-----
         for (Projectile p : projectiles) {
 
             if (!p.isActive) {
@@ -270,5 +293,4 @@ public class GameController {
         Projectile.disposeShared();
 
     }
-
 }

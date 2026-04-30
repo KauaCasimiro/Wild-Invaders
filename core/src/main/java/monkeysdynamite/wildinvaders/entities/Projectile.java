@@ -31,6 +31,8 @@ public class Projectile {
         PICKAXE
     }
 
+    public int collumnIndex;
+
     public Projectile(float x, float y, ProjectileType type) {
         this.x = x;
         this.y = y;
