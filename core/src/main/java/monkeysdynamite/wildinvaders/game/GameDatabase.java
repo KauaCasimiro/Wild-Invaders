@@ -1,6 +1,8 @@
 package monkeysdynamite.wildinvaders.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import monkeysdynamite.wildinvaders.controllers.Controllers;
 import monkeysdynamite.wildinvaders.entities.Player;
@@ -30,10 +32,16 @@ public class GameDatabase {
     public boolean right;
     public boolean shoot;
 
+    public Map<Integer, Enemy> frontEnemyByColumn = new HashMap<>();
+
     public GameDatabase() {
         enemies = new ArrayList<>();
         projectiles = new ArrayList<>();
         controllers = new Controllers();
+    }
+
+    public int getColumn(float x) {
+        return Math.round(x / 28f);
     }
 
 }

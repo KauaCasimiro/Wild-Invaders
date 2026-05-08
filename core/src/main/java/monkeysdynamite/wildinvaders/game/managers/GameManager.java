@@ -4,7 +4,6 @@ package monkeysdynamite.wildinvaders.game.managers;
 import com.badlogic.gdx.graphics.Texture;
 import monkeysdynamite.wildinvaders.config.GameConfig;
 import monkeysdynamite.wildinvaders.entities.Enemy;
-import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
 import monkeysdynamite.wildinvaders.game.sytems.*;
 
@@ -27,6 +26,7 @@ public class GameManager {
 
         //Enemies systems
         systems.add(new EnemyFormationSystem());
+        systems.add(new EnemyColumnSystem());
         systems.add(new EnemyShootingSystem());
 
         //Combat system
