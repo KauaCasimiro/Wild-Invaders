@@ -15,8 +15,8 @@ public class PlayerShootingSystem implements GameSystem {
             }
         }
 
-        if (db.controllers.shoot && !hasDynamite) {
-            db.projectiles.add(new Projectile(db.player.getX(), db.player.getY(), Projectile.ProjectileType.DYNAMITE));
+        if (db.shoot && !hasDynamite) {
+            db.projectiles.add(new Projectile(db.player.getX(), db.player.getY(), Projectile.ProjectileType.DYNAMITE, db.assets.dynamiteTexture));
         }
     }
 }

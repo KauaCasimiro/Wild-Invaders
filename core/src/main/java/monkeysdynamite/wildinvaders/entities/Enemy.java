@@ -12,16 +12,11 @@ public class Enemy {
 
     public boolean isAlive;
 
-    private static Texture texture;
+    private Texture texture;
     private Sprite sprite;
     private Rectangle bounds;
 
     private EnemyType  type;
-
-    private static Texture tractorTexture;
-    private static Texture farmerTexture;
-    private static Texture minerTexture;
-
     public int rowIndex;
     public int columnIndex;
 
@@ -31,31 +26,27 @@ public class Enemy {
         MINER
     }
 
-    public Enemy (float x, float y, EnemyType type) {
+    public Enemy (float x, float y, EnemyType type, Texture texture) {
         this.x = x;
         this.y = y;
+
         this.type = type;
+        this.texture = texture;
 
         this.width = 48;
         this.height = 48;
 
         this.isAlive = true;
 
-        if (tractorTexture == null) {
-            tractorTexture = new Texture(Gdx.files.internal("enemies/trator.png"));
-            farmerTexture = new Texture(Gdx.files.internal("enemies/fazendeiro.png"));
-            minerTexture = new Texture(Gdx.files.internal("enemies/garimpeiro.png"));
-        }
-
         switch (type) {
             case TRACTOR:
-                sprite = new Sprite(tractorTexture);
+                sprite = new Sprite(texture);
             break;
             case FARMER:
-                sprite = new Sprite(farmerTexture);
+                sprite = new Sprite(texture);
             break;
             case MINER:
-                sprite = new Sprite(minerTexture);
+                sprite = new Sprite(texture);
             break;
         }
 
@@ -91,6 +82,10 @@ public class Enemy {
         return type;
     }
 
+    public Texture getTexture() {
+        return texture;
+    }
+
     public Projectile.ProjectileType getProjectileType() {
         switch (type) {
             case FARMER:
@@ -106,14 +101,5 @@ public class Enemy {
 
     public void update() {
         bounds.setPosition(x, y);
-    }
-
-
-
-    public static void disposeShared() {
-        if (texture != null) {
-            texture.dispose();
-            texture = null;
-        }
     }
 }

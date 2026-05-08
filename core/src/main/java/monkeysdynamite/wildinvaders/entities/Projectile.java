@@ -19,11 +19,8 @@ public class Projectile {
     public float x;
     public float y;
 
+    private Texture texture;
     private ProjectileType type;
-
-    private static Texture dynamiteTexture;
-    private static Texture pickaxeTexture;
-    private static Texture bulletTexture;
 
     public enum ProjectileType {
         DYNAMITE,
@@ -33,17 +30,15 @@ public class Projectile {
 
     public int collumnIndex;
 
-    public Projectile(float x, float y, ProjectileType type) {
+    public Projectile(float x, float y, ProjectileType type, Texture texture) {
         this.x = x;
         this.y = y;
+
         this.type = type;
+        this.texture = texture;
+
         this.isActive = true;
 
-        if (dynamiteTexture == null) {
-            dynamiteTexture = new Texture(Gdx.files.internal("projectiles/dynamite.png"));
-            pickaxeTexture = new Texture(Gdx.files.internal("projectiles/pickaxe.png"));
-            bulletTexture = new Texture(Gdx.files.internal("projectiles/bullet.png"));
-        }
         bounds = new Rectangle(x, y, width, height);
 
         switch (type) {
@@ -61,6 +56,10 @@ public class Projectile {
 
     public Rectangle getBounds() {
         return bounds;
+    }
+
+    public ProjectileType getType() {
+        return type;
     }
 
     public void update(float delta) {
@@ -81,41 +80,10 @@ public class Projectile {
         bounds.setPosition(x, y);
     }
 
-    public ProjectileType getType() {
-        return type;
-    }
-
-
     public void render(SpriteBatch batch) {
         if (!isActive) {
             return;
         }
-
-        switch (type) {
-            case DYNAMITE:
-                batch.draw(dynamiteTexture, x, y, width, height);
-            break;
-            case BULLET:
-                batch.draw(bulletTexture, x, y, width, height);
-            break;
-            case PICKAXE:
-                batch.draw(pickaxeTexture, x, y, width, height);
-            break;
-        }
-    }
-
-    public static void disposeShared() {
-        if (dynamiteTexture != null) {
-            dynamiteTexture.dispose();
-            dynamiteTexture = null;
-        }
-        if (pickaxeTexture != null) {
-            pickaxeTexture.dispose();
-            pickaxeTexture = null;
-        }
-        if (bulletTexture != null) {
-            bulletTexture.dispose();
-            bulletTexture = null;
-        }
+        batch.draw(texture, x, y, width, height);
     }
 }

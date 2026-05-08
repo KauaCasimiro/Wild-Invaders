@@ -6,6 +6,8 @@ import monkeysdynamite.wildinvaders.controllers.Controllers;
 import monkeysdynamite.wildinvaders.entities.Player;
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.entities.Projectile;
+import monkeysdynamite.wildinvaders.game.managers.AssetManager;
+
 public class GameDatabase {
 
     public Player player;
@@ -21,6 +23,12 @@ public class GameDatabase {
     public float enemyShootTimer = 0f;
     public float enemyShootCooldown = 1.0f;
     public int maxEnemyProjectiles = 3;
+
+    public AssetManager assets;
+
+    public boolean left;
+    public boolean right;
+    public boolean shoot;
 
     public GameDatabase() {
         enemies = new ArrayList<>();
