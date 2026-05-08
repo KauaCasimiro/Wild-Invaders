@@ -11,10 +11,10 @@ public class MobileHud {
     public boolean isShootJustPreesed;
     private ShapeRenderer shapeRenderer;
 
-    //area of buttons (x, y, size)
-    private float leftx, lefty, size;
-    private float rightx, righty;
-    private float shootx, shooty;
+    // Screen zones
+    private float leftZoneWidth;
+    private float rightZoneWidth;
+    private float shootZoneX;
 
     public MobileHud() {
         shapeRenderer = new ShapeRenderer();
@@ -25,37 +25,52 @@ public class MobileHud {
 
     public void resize() {
         float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
+        // LEFT MOVEMENT = 15%
+        leftZoneWidth = w * 0.15f;
 
-        size = w * 0.18f; // size button
+        // RIGHT MOVEMENT = 15%
+        rightZoneWidth = w * 0.15f;
 
-        // left button (bottom left corner)
-        leftx = w * 0.05f;
-        lefty = h * 0.08f;
-
-        // right button (bottom right corner)
-        rightx = w - size - (w * 0.05f);
-        righty = h * 0.08f;
-
-        //shoot button
-        shootx = rightx;
-        shooty = h * 0.50f;
+        // SHOOT ZONE START = 70%
+        shootZoneX = w * 0.70f;
     }
 
     public void render() {
+
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
+
+        float buttonSize = 200f;
+        float hudHeight = h * 0.25f;
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        // left button
+        // LEFT BUTTON (15% da largura, mas 30x30 fixo)
         shapeRenderer.setColor(Color.DARK_GRAY);
-        shapeRenderer.rect(leftx, lefty, size, size);
+        shapeRenderer.rect(
+            (w * 0.15f) / 2f - buttonSize / 2f,
+            hudHeight / 2f - buttonSize / 2f,
+            buttonSize,
+            buttonSize
+        );
 
-        // right button
-        shapeRenderer.setColor(Color.DARK_GRAY);
-        shapeRenderer.rect(rightx, righty, size, size);
+        // RIGHT BUTTON (15% da largura)
+        shapeRenderer.setColor(Color.GRAY);
+        shapeRenderer.rect(
+            w * 0.15f + (w * 0.15f) / 2f - buttonSize / 2f,
+            hudHeight / 2f - buttonSize / 2f,
+            buttonSize,
+            buttonSize
+        );
 
-        //shoot button
+        // SHOOT BUTTON (30% da tela direita)
         shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(shootx, shooty, size, size);
+        shapeRenderer.rect(
+            w * 0.70f + (w * 0.30f) / 2f - buttonSize / 2f,
+            hudHeight / 2f - buttonSize / 2f,
+            buttonSize,
+            buttonSize
+        );
 
         shapeRenderer.end();
     }
@@ -65,27 +80,28 @@ public class MobileHud {
         isRightPressed = false;
         isShootJustPreesed = false;
 
-        if (Gdx.input.isTouched()) {
-            float x = Gdx.input.getX();
-            float y = Gdx.input.getY();
+        if (!Gdx.input.isTouched()) {
+            return;
+        }
 
-            // In the LibGDX: the origin is top, HUD is base -> invert y
-            float h = Gdx.graphics.getHeight();
-            y = h - y;
+        float x = Gdx.input.getX();
 
-            //check left button
-            if (x >= leftx && x <= leftx + size && y >= lefty && y <= lefty + size) {
-                isLeftPressed = true;
-            }
+        // LEFT ZONE
+        if (x <= leftZoneWidth) {
 
-            //check right button
-            if (x >= rightx && x <= rightx + size && y >= righty && y <= righty + size) {
-                isRightPressed = true;
-            }
+            isLeftPressed = true;
+        }
 
-            if (x >= shootx && x <= shootx + size && y >= shooty && y <= shooty + size) {
-                isShootJustPreesed = true;
-            }
+        // RIGHT MOVE ZONE
+        else if (x <= leftZoneWidth + rightZoneWidth) {
+
+            isRightPressed = true;
+        }
+
+        // SHOOT ZONE
+        else if (x >= shootZoneX) {
+
+            isShootJustPreesed = true;
         }
     }
 
