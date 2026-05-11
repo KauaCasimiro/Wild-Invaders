@@ -4,8 +4,14 @@ import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
 
 public class PlayerShootingSystem implements GameSystem {
+    
     @Override
     public void update(GameDatabase db, float delta) {
+
+        if (!db.isPlayerActive()) {
+            return;
+        }
+
         boolean hasDynamite = false;
 
         for (Projectile p : db.projectiles) {

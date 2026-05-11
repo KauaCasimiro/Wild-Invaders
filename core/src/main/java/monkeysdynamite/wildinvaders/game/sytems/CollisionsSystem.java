@@ -1,15 +1,26 @@
 package monkeysdynamite.wildinvaders.game.sytems;
 
+import javax.swing.JOptionPane;
+
+import com.badlogic.gdx.Gdx;
+
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
 
 public class CollisionsSystem implements GameSystem {
+
+    private final ScoreSystem scoreSystem;
+
+    public CollisionsSystem(ScoreSystem scoreSystem) {
+        this.scoreSystem = scoreSystem;
+    }
+
     @Override
     public void update(GameDatabase db, float delta) {
 
         handleDynamiteEnemyCollision(db);
-        //handleProjectilePlayerCollision(db);
+        handleProjectilePlayerCollision(db);
     }
 
     //Collison dynamite x enemies
@@ -36,6 +47,7 @@ public class CollisionsSystem implements GameSystem {
                 Enemy front = db.frontEnemyByColumn.get(enemy.columnIndex);
 
                 if (front == enemy) {
+                    scoreSystem.onEnemyKilled(enemy, db);
                     enemy.isAlive = false;
                     p.isActive = false;
                 } else {
@@ -56,7 +68,13 @@ public class CollisionsSystem implements GameSystem {
             if (p.getType() == Projectile.ProjectileType.DYNAMITE) continue;
 
             if (p.getBounds().overlaps(db.player.getBounds())) {
-                db.player.isAlive = false;
+                db.playerLives--;
+                if (db.playerLives <= 0) {
+                    db.player.isAlive = false;
+                    db.isGameOver = true;
+                    JOptionPane.showMessageDialog(null, "Game Over");
+                    Gdx.app.exit();
+                }
                 p.isActive = false;
                 break;
             }

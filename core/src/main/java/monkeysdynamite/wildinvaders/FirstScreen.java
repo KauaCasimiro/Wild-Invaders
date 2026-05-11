@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 //Imports packages
 import monkeysdynamite.wildinvaders.config.GameCamera;
@@ -28,6 +29,7 @@ public class FirstScreen implements Screen {
     private GameDatabase db;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
+    private BitmapFont font;
 
     private GameCamera gameCamera;
     private HudCamera hudCamera;
@@ -45,7 +47,7 @@ public class FirstScreen implements Screen {
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-
+        font = new BitmapFont();
         gameController = new GameController();
 
         db = gameController.getDb();
@@ -130,16 +132,69 @@ public class FirstScreen implements Screen {
 
         hudCamera.apply();
         batch.setProjectionMatrix(hudCamera.getCamera().combined);
+        batch.begin();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         //-----HUD TOP-----
         shapeRenderer.rect(0, GameConfig.WorldConfig.WORLD_HEIGHT - GameConfig.HudConfig.HUD_TOP_HEIGHT, GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.HudConfig.HUD_TOP_HEIGHT);
         //-----HUD TOP-----
+        float topY = GameConfig.WorldConfig.WORLD_HEIGHT - 10;
+        float x = 10;
+
+        //TIME
+        font.draw(batch, "Time: " + (int)gameController.getDb().gameTime, x, topY);
+        x += 120;
+
+        //ENEMIES LEFT
+        int aliveEnemies = 0;
+        for (Enemy e : gameController.getDb().enemies) {
+            if (e.isAlive) {
+                aliveEnemies++;
+            }
+        }
+        font.draw(batch, "Alives: " + aliveEnemies, x, topY);
+        x += 120;
+
+        font.draw(batch, "Score: " + db.score, x, topY);
+        x += 120;
+
+        //DIFFICULTY MULTIPLIER
+        font.draw(batch, "Difficulty: " + String.format("%.2f", gameController.getDb().difficultyMultiplier), x, topY);
+        x += 120;
+
+        //TIME FACTOR
+        float timeFactor = (int)(gameController.getDb().gameTime / 30) * 0.5f;
+        font.draw(batch, "Time Factor: " + String.format("%.2f", timeFactor), x, topY);
+        x += 120;
+
+        //MOVEMENT 
+        font.draw(batch, "Move: " + (int)gameController.getDb().formationSpeed, x, topY);
+        x += 120;
+
+        //COOLDOWN
+        font.draw(batch, "Cooldown: " + String.format("%.2f", gameController.getDb().enemyShootCooldown), x, topY);
+        x += 120;
+
+        //FPS
+        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), x, topY);
+
 
         //-----HUD BOTTOM-----
         shapeRenderer.rect(0, 0, GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.HudConfig.HUD_BOTTOM_HEIGHT);
         //-----HUD BOTTOM-----
+
+        float lifeSize = 38f;
+        float padding = 10f;
+
+        float startX = padding;
+        float starY = padding;
+
+        for (int i = 0; i < gameController.getDb().playerLives; i++) {
+            batch.draw(gameController.getDb().assets.playerTexture, startX + i * (lifeSize + padding), starY, lifeSize, lifeSize);
+        }
+        
+        batch.end();
 
         shapeRenderer.end();
 

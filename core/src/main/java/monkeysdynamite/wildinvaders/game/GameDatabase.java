@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
+import com.badlogic.gdx.math.MathUtils;
+
 import monkeysdynamite.wildinvaders.controllers.Controllers;
 import monkeysdynamite.wildinvaders.entities.Player;
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.managers.AssetManager;
+import monkeysdynamite.wildinvaders.game.tools.ScoreRange;
 
 public class GameDatabase {
 
@@ -20,7 +25,7 @@ public class GameDatabase {
     public Controllers controllers;
 
     public int formationDirection = 1;
-    public float formationSpeed = 50f;
+   
 
     public float enemyShootTimer = 0f;
     public float enemyShootCooldown = 1.0f;
@@ -34,6 +39,35 @@ public class GameDatabase {
 
     public Map<Integer, Enemy> frontEnemyByColumn = new HashMap<>();
 
+    public int playerLives = 3;
+
+    public boolean isGameOver = false;
+
+    public float gameTime = 0f;
+
+    public int totalEnemies = 0;
+
+    public float difficultyMultiplier = 1f;
+
+    public float baseFormationSpeed = 50f;
+     public float formationSpeed = 50f;
+
+    public float baseEnemyShootCooldown = 1.0f;
+
+    //SCORE
+    public int score = 0;
+    public int lastScoreGain = 0;
+    public int highScore = 0;
+
+    public int scoreTier = 0;
+
+    public ScoreRange tractorScoreRange = new ScoreRange(10, 80);
+    public ScoreRange farmerScoreRange = new ScoreRange(90, 150);
+    public ScoreRange minerScoreRange = new ScoreRange(160, 220);
+
+    public Map<Integer, Integer> alivesEnemiesByRow = new HashMap<>();
+    public Map<Integer, Integer> alivesEnemiesByColumn = new HashMap<>();
+
     public GameDatabase() {
         enemies = new ArrayList<>();
         projectiles = new ArrayList<>();
@@ -44,4 +78,7 @@ public class GameDatabase {
         return Math.round(x / 28f);
     }
 
+    public boolean isPlayerActive() {
+        return player.isAlive && !isGameOver;
+    }
 }

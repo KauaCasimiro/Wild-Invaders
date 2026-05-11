@@ -14,9 +14,11 @@ public class GameManager {
 
     private List<GameSystem> systems;
     private AssetManager assets;
+    private ScoreSystem scoreSystem;
 
     public GameManager(AssetManager assets) {
         this.assets = assets;
+        this.scoreSystem = new ScoreSystem();
 
         systems = new ArrayList<>();
 
@@ -24,14 +26,18 @@ public class GameManager {
         systems.add(new PlayerControlSystem());
         systems.add(new PlayerShootingSystem());
 
+        systems.add(new DifficultySystem());
+
         //Enemies systems
         systems.add(new EnemyFormationSystem());
         systems.add(new EnemyColumnSystem());
         systems.add(new EnemyShootingSystem());
 
+        systems.add(scoreSystem);
+
         //Combat system
         systems.add(new ProjectileMovementSystem());
-        systems.add(new CollisionsSystem());
+        systems.add(new CollisionsSystem(scoreSystem));
 
         //Cleaning system
         systems.add(new CleanupSystem());
@@ -52,6 +58,7 @@ public class GameManager {
         int spacingY = 48;
         float starX = 50;
         float starY = GameConfig.GameArea.GAME_MIN_Y + 200;
+        db.totalEnemies = rows * cols;
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
@@ -87,4 +94,5 @@ public class GameManager {
     public void dispose(GameDatabase db) {
         assets.dispose();
     }
+    
 }
