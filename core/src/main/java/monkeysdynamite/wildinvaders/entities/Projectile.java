@@ -2,7 +2,6 @@ package monkeysdynamite.wildinvaders.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Projectile {
@@ -62,6 +61,10 @@ public class Projectile {
         return type;
     }
 
+    public Texture getTexture() {
+        return texture;
+    }
+
     public void update(float delta) {
         if (!isActive) {
             return;
@@ -78,12 +81,5 @@ public class Projectile {
         }
 
         bounds.setPosition(x, y);
-    }
-
-    public void render(SpriteBatch batch) {
-        if (!isActive) {
-            return;
-        }
-        batch.draw(texture, x, y, width, height);
     }
 }

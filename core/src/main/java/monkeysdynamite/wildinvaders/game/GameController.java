@@ -17,6 +17,7 @@ import monkeysdynamite.wildinvaders.entities.Player;
 import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.managers.AssetManager;
 import monkeysdynamite.wildinvaders.game.managers.GameManager;
+import monkeysdynamite.wildinvaders.game.tools.RenderTool;
 
 public class GameController {
     private GameDatabase db;
@@ -26,6 +27,8 @@ public class GameController {
     private GameManager gameManager;
 
     private AssetManager assets;
+
+    private RenderTool renderTool;
 
 
     public GameController() {
@@ -39,12 +42,14 @@ public class GameController {
         assets = new AssetManager();
         db.assets = assets;
         gameManager = new GameManager(assets);
+        renderTool = new RenderTool();
 
         //PLAYER
-        db.player = new Player(400.0f, GameConfig.GameArea.GAME_MIN_Y + 20, 48.0f, 48.0f, assets.playerTexture);
+        db.player = new Player(400.0f, GameConfig.GameArea.GAME_MIN_Y + 20, 48.0f, 48.0f);
 
         //INITIALIZE GAMEPLAY
         gameManager.intializeEnemies(db);
+        gameManager.initializeBarriers(db);
 
     }
 
@@ -62,15 +67,7 @@ public class GameController {
 
     public void render(SpriteBatch batch) {
 
-        db.player.render(batch);
-
-        for (Enemy enemy : db.enemies) {
-            enemy.render(batch);
-        }
-
-        for (Projectile projectile : db.projectiles) {
-            projectile.render(batch);
-        }
+        renderTool.render(batch, db);
     }
 
     public void dispose() {

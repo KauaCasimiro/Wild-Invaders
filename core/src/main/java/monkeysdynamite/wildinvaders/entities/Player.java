@@ -1,21 +1,20 @@
 package monkeysdynamite.wildinvaders.entities;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Gdx;
-import monkeysdynamite.wildinvaders.controllers.Controllers;
 
 public class Player {
-    private Texture texture;
     private Rectangle player;
-
     private Rectangle bounds;
 
     public boolean isAlive;
 
-    public Player(float x, float y, float width, float height, Texture texture) {
-        this.texture = texture;
+    public float animationTimer = 0f;
+
+    public boolean isAttacking;
+    public float attackTimer = 0f;
+
+    public Player(float x, float y, float width, float height) {
 
         player = new Rectangle(x, y, width, height);
         bounds = new Rectangle(x, y, width, height);
@@ -35,6 +34,19 @@ public class Player {
         bounds.setPosition(player.x, player.y);
     }
 
+    public void updateAnimation(float delta) {
+        animationTimer += delta;
+
+        if (isAttacking) {
+            attackTimer += delta;
+
+            if (attackTimer >= 0.24) {
+                isAttacking = false;
+                attackTimer = 0;
+            }
+        }
+    }
+
     public float getX() {
         return player.x;
     }
@@ -45,13 +57,5 @@ public class Player {
 
     public Rectangle getBounds() {
         return bounds;
-    }
-
-    public void render(SpriteBatch batch) {
-        if (!isAlive) {
-            return;
-        }
-
-        batch.draw(texture, player.x, player.y,  player.width, player.height);
     }
 }

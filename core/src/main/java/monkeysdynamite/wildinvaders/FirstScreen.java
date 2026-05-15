@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
@@ -17,6 +18,8 @@ import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameController;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
+import monkeysdynamite.wildinvaders.game.tools.DebugTool;
+import monkeysdynamite.wildinvaders.game.tools.FloatingScore;
 import monkeysdynamite.wildinvaders.hud.HudCamera;
 import monkeysdynamite.wildinvaders.hud.MobileHud;
 
@@ -31,6 +34,7 @@ public class FirstScreen implements Screen {
     private ShapeRenderer shapeRenderer;
     private BitmapFont font;
 
+    private DebugTool debugTool;
     private GameCamera gameCamera;
     private HudCamera hudCamera;
 
@@ -51,6 +55,8 @@ public class FirstScreen implements Screen {
         gameController = new GameController();
 
         db = gameController.getDb();
+
+        debugTool = new DebugTool();
     }
 
     @Override
@@ -93,111 +99,32 @@ public class FirstScreen implements Screen {
         //-----RENDER GAME-----
         batch.begin();
         gameController.render(batch);
+        debugTool.renderFloatingScores(batch, font, db);
         batch.end();
         //-----RENDER GAME-----
 
-        //-----DEBUG COLLIDERS-----
-        shapeRenderer.setProjectionMatrix(gameCamera.getCamera().combined);
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-        OrthographicCamera cam = gameCamera.getCamera();
-
-        float worldWidth = GameConfig.WorldConfig.WORLD_WIDTH;
-        float worldHeight = GameConfig.WorldConfig.WORLD_HEIGHT;
-
-        shapeRenderer.rect(0, 0, worldWidth, worldHeight);
-        //-----DEBUG COLLIDERS-----
-
-        //-----ENEMIES-----
-        for (Enemy enemy : db.enemies) {
-            shapeRenderer.rect(enemy.getBounds().x, enemy.getBounds().y, enemy.getBounds().width, enemy.getBounds().height);
-        }
-        //-----ENEMIES-----
-
-        // PROJECTILES
-        for (Projectile p : db.projectiles) {
-            shapeRenderer.rect(
-                p.getBounds().x,
-                p.getBounds().y,
-                p.getBounds().width,
-                p.getBounds().height
-            );
-        }
-        // PROJECTILES
-
-        shapeRenderer.end();
-
-        //-----HUD CAMERA-----
+        debugTool.renderColliders(shapeRenderer, gameCamera.getCamera(), db);
 
         hudCamera.apply();
         batch.setProjectionMatrix(hudCamera.getCamera().combined);
+        debugTool.renderHudAreas(shapeRenderer, hudCamera.getCamera());
+
         batch.begin();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-        //-----HUD TOP-----
-        shapeRenderer.rect(0, GameConfig.WorldConfig.WORLD_HEIGHT - GameConfig.HudConfig.HUD_TOP_HEIGHT, GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.HudConfig.HUD_TOP_HEIGHT);
-        //-----HUD TOP-----
-        float topY = GameConfig.WorldConfig.WORLD_HEIGHT - 10;
-        float x = 10;
-
-        //TIME
-        font.draw(batch, "Time: " + (int)gameController.getDb().gameTime, x, topY);
-        x += 120;
-
-        //ENEMIES LEFT
-        int aliveEnemies = 0;
-        for (Enemy e : gameController.getDb().enemies) {
-            if (e.isAlive) {
-                aliveEnemies++;
-            }
-        }
-        font.draw(batch, "Alives: " + aliveEnemies, x, topY);
-        x += 120;
-
-        font.draw(batch, "Score: " + db.score, x, topY);
-        x += 120;
-
-        //DIFFICULTY MULTIPLIER
-        font.draw(batch, "Difficulty: " + String.format("%.2f", gameController.getDb().difficultyMultiplier), x, topY);
-        x += 120;
-
-        //TIME FACTOR
-        float timeFactor = (int)(gameController.getDb().gameTime / 30) * 0.5f;
-        font.draw(batch, "Time Factor: " + String.format("%.2f", timeFactor), x, topY);
-        x += 120;
-
-        //MOVEMENT 
-        font.draw(batch, "Move: " + (int)gameController.getDb().formationSpeed, x, topY);
-        x += 120;
-
-        //COOLDOWN
-        font.draw(batch, "Cooldown: " + String.format("%.2f", gameController.getDb().enemyShootCooldown), x, topY);
-        x += 120;
-
-        //FPS
-        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), x, topY);
-
-
-        //-----HUD BOTTOM-----
-        shapeRenderer.rect(0, 0, GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.HudConfig.HUD_BOTTOM_HEIGHT);
-        //-----HUD BOTTOM-----
+        debugTool.renderHudDebug(batch, font, db);
 
         float lifeSize = 38f;
         float padding = 10f;
 
         float startX = padding;
-        float starY = padding;
+        float startY = padding;
 
-        for (int i = 0; i < gameController.getDb().playerLives; i++) {
-            batch.draw(gameController.getDb().assets.playerTexture, startX + i * (lifeSize + padding), starY, lifeSize, lifeSize);
+        TextureRegion playerFrame = db.assets.playerIdleAnimation.getKeyFrame(db.player.animationTimer, true);
+
+        for (int i = 0; i < db.playerLives; i++) {
+
+            batch.draw(playerFrame, startX + i * (lifeSize + padding), startY, lifeSize, lifeSize);
         }
-        
         batch.end();
-
-        shapeRenderer.end();
-
         //-----MOBILE HUD-----
         if (mobile != null) {
             mobile.render();

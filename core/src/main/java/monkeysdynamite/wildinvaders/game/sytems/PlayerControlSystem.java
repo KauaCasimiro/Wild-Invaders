@@ -11,6 +11,7 @@ public class PlayerControlSystem implements GameSystem {
         }
 
         db.player.updateMovement(db.left, db.right);
+        db.player.updateAnimation(delta);
     }
 
 }

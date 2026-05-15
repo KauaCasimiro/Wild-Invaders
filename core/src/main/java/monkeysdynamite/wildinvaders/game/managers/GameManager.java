@@ -3,6 +3,7 @@ package monkeysdynamite.wildinvaders.game.managers;
 
 import com.badlogic.gdx.graphics.Texture;
 import monkeysdynamite.wildinvaders.config.GameConfig;
+import monkeysdynamite.wildinvaders.entities.Barrier;
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
 import monkeysdynamite.wildinvaders.game.sytems.*;
@@ -34,10 +35,13 @@ public class GameManager {
         systems.add(new EnemyShootingSystem());
 
         systems.add(scoreSystem);
+        systems.add(new FloatingScoreSystem());
 
         //Combat system
         systems.add(new ProjectileMovementSystem());
         systems.add(new CollisionsSystem(scoreSystem));
+
+        systems.add(new BarrierSystem());
 
         //Cleaning system
         systems.add(new CleanupSystem());
@@ -57,7 +61,7 @@ public class GameManager {
         int spacingX = 56;
         int spacingY = 48;
         float starX = 50;
-        float starY = GameConfig.GameArea.GAME_MIN_Y + 200;
+        float starY = GameConfig.GameArea.GAME_MIN_Y + 250;
         db.totalEnemies = rows * cols;
 
         for (int row = 0; row < rows; row++) {
@@ -91,8 +95,25 @@ public class GameManager {
 
     }
 
+    public void initializeBarriers(GameDatabase db) {
+        db.barriers.clear();
+
+        int count = 7;
+
+        float starX = 80;
+        float starY = GameConfig.GameArea.GAME_MIN_Y + 90;
+
+        float spacing = 180;
+
+        for (int i = 0; i < count; i++) {
+            float x = starX + i * spacing;
+
+            Barrier b = new Barrier(x, starY, 80, 80);
+            db.barriers.add(b);
+        }
+    }
     public void dispose(GameDatabase db) {
         assets.dispose();
     }
-    
+
 }

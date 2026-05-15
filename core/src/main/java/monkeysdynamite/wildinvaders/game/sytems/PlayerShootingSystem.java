@@ -4,7 +4,7 @@ import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
 
 public class PlayerShootingSystem implements GameSystem {
-    
+
     @Override
     public void update(GameDatabase db, float delta) {
 
@@ -22,6 +22,9 @@ public class PlayerShootingSystem implements GameSystem {
         }
 
         if (db.shoot && !hasDynamite) {
+            db.player.isAttacking = true;
+            db.player.attackTimer = 0f;
+
             db.projectiles.add(new Projectile(db.player.getX(), db.player.getY(), Projectile.ProjectileType.DYNAMITE, db.assets.dynamiteTexture));
         }
     }

@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import com.badlogic.gdx.Gdx;
 
+import monkeysdynamite.wildinvaders.entities.Barrier;
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
@@ -20,6 +21,9 @@ public class CollisionsSystem implements GameSystem {
     public void update(GameDatabase db, float delta) {
 
         handleDynamiteEnemyCollision(db);
+
+        handleProjectileCollision(db);
+
         handleProjectilePlayerCollision(db);
     }
 
@@ -64,7 +68,9 @@ public class CollisionsSystem implements GameSystem {
 
         for (Projectile p : db.projectiles) {
 
-            if (!p.isActive) continue;
+            if (!p.isActive) {
+                continue;
+            }
             if (p.getType() == Projectile.ProjectileType.DYNAMITE) continue;
 
             if (p.getBounds().overlaps(db.player.getBounds())) {
@@ -78,6 +84,38 @@ public class CollisionsSystem implements GameSystem {
                 p.isActive = false;
                 break;
             }
+        }
+    }
+
+    //Collison projectile x barrier
+    private void handleProjectileCollision(GameDatabase db) {
+        for (Projectile p : db.projectiles) {
+            if (!p.isActive) {
+                continue;
+            }
+
+            for (Barrier b : db.barriers) {
+                if (!b.isActive) {
+                    continue;
+                }
+
+                if (!p.getBounds().overlaps(b.getBounds())) {
+                    continue;
+                }
+
+                b.hit--;
+
+                b.isHit = true;
+                b.hitTimer = 0f;
+
+                p.isActive = false;
+
+                if (b.hit <= 0) {
+                    b.isActive = false;
+                }
+                break;
+            }
+
         }
     }
 }

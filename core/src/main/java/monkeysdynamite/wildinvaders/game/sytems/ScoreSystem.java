@@ -2,6 +2,7 @@ package monkeysdynamite.wildinvaders.game.sytems;
 
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
+import monkeysdynamite.wildinvaders.game.tools.FloatingScore;
 
 public class ScoreSystem implements GameSystem {
     @Override
@@ -16,21 +17,36 @@ public class ScoreSystem implements GameSystem {
     public void onEnemyKilled(Enemy enemy, GameDatabase db) {
         int score = rollEnemyScore(enemy, db);
 
+        String bonusText = "";
+
         boolean rowBonus = db.alivesEnemiesByRow.get(enemy.rowIndex) == 1;
         boolean columnBonus = db.alivesEnemiesByColumn.get(enemy.columnIndex) == 1;
 
         //Apply bonus 50%
         if (columnBonus) {
             score = (int) (score * 1.5f);
+            bonusText += "+50%";
         }
 
         //Apply bonus 2x
         if (rowBonus) {
             score *= 2;
+            bonusText += "x2";
         }
 
         db.score += score;
         db.lastScoreGain = score;
+
+        FloatingScore floatingScore = new FloatingScore();
+
+        floatingScore.x = enemy.x;
+        floatingScore.y = enemy.y;
+
+        floatingScore.value = score;
+
+        floatingScore.bonusText = bonusText;
+
+        db.floatingScores.add(floatingScore);
     }
 
     private int rollEnemyScore(Enemy enemy, GameDatabase db) {
@@ -63,25 +79,25 @@ public class ScoreSystem implements GameSystem {
                 db.tractorScoreRange.set(10, 80);
                 db.farmerScoreRange.set(90, 150);
                 db.minerScoreRange.set(160, 220);
-                
+
             break;
 
              case 2:
                 db.tractorScoreRange.set(50, 120);
                 db.farmerScoreRange.set(140, 210);
                 db.minerScoreRange.set(220, 280);
-                
+
             break;
 
              case 3:
                 db.tractorScoreRange.set(90, 150);
                 db.farmerScoreRange.set(180, 240);
                 db.minerScoreRange.set(280, 350);
-                
+
             break;
-        
+
             default:
-                
+
             break;
         }
     }
@@ -99,10 +115,19 @@ public class ScoreSystem implements GameSystem {
 
             int column = enemy.columnIndex;
 
-            db.alivesEnemiesByRow.put(row, db.alivesEnemiesByRow.getOrDefault(row, 0) + 1);
+            Integer rowCount = db.alivesEnemiesByRow.get(row);
+            if (rowCount == null) {
+                rowCount = 0;
+            }
+            db.alivesEnemiesByRow.put(row, rowCount + 1);
+            Integer columnCount = db.alivesEnemiesByColumn.get(column);
 
-            db.alivesEnemiesByColumn.put(column, db.alivesEnemiesByColumn.getOrDefault(column, 0) + 1);
-    }
-    
+            if (columnCount == null) {
+                columnCount = 0;
+            }
+
+            db.alivesEnemiesByColumn.put(column, columnCount + 1);
+        }
+
 }
 }

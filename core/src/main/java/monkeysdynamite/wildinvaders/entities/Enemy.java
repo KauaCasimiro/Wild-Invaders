@@ -38,6 +38,8 @@ public class Enemy {
 
         this.isAlive = true;
 
+        sprite = new Sprite(texture);
+
         switch (type) {
             case TRACTOR:
                 sprite = new Sprite(texture);
@@ -53,15 +55,8 @@ public class Enemy {
         bounds = new Rectangle(x, y, width, height);
     }
 
-    public void render (SpriteBatch batch) {
-        if (!isAlive) {
-            return;
-        }
-
-        sprite.setPosition(x, y);
-        sprite.setSize(width, height);
-        sprite.setOriginCenter();
-        sprite.draw(batch);
+    public Sprite getSprite() {
+        return sprite;
     }
 
     public void setDirection(int direction) {
