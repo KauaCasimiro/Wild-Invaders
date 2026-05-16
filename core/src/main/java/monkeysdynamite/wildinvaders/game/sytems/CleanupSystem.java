@@ -12,20 +12,24 @@ public class CleanupSystem implements GameSystem {
 
         //Remove projectiles
         Iterator<Projectile> projectileIterator = db.projectiles.iterator();
-        while (projectileIterator.hasNext()) {
-            Projectile p = projectileIterator.next();
-            if (!p.isActive) {
-                projectileIterator.remove();
-            }
+        if (projectileIterator.hasNext()) {
+            do {
+                Projectile p = projectileIterator.next();
+                if (!p.isActive) {
+                    projectileIterator.remove();
+                }
+            } while (projectileIterator.hasNext());
         }
 
         //Remove enemies
         Iterator<Enemy> enemyIterator  = db.enemies.iterator();
-        while (enemyIterator.hasNext()) {
-            Enemy enemy = enemyIterator.next();
-            if (!enemy.isAlive) {
-                enemyIterator.remove();
-            }
+        if (enemyIterator.hasNext()) {
+            do {
+                Enemy enemy = enemyIterator.next();
+                if (!enemy.isAlive) {
+                    enemyIterator.remove();
+                }
+            } while (enemyIterator.hasNext());
         }
     }
 }

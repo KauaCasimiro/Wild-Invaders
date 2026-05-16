@@ -83,6 +83,10 @@ public class DebugTool {
         font.draw(batch, "Score: " + db.score, x, topY);
         x += 120;
 
+        //HIGH SCORE
+        font.draw(batch, "High Score: " + db.highScore, x, topY);
+        x += 120;
+
         //DIFFICULTY
         font.draw(batch, "Difficulty: " + String.format("%.2f", db.difficultyMultiplier), x, topY);
         x += 120;
@@ -103,6 +107,20 @@ public class DebugTool {
 
         //FPS
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), x, topY);
+    }
+
+    public void renderWaveMessage(SpriteBatch batch, BitmapFont font, GameDatabase db) {
+
+        if (!db.waveTransition) {
+            return;
+        }
+
+        String text = "WAVE " + db.wave;
+
+        float centerX = GameConfig.WorldConfig.WORLD_WIDTH / 2f;
+        float centerY = GameConfig.WorldConfig.WORLD_HEIGHT / 2f;
+
+        font.draw(batch, text, centerX - 40, centerY);
     }
 
     public void renderFloatingScores(SpriteBatch batch, BitmapFont font, GameDatabase db) {

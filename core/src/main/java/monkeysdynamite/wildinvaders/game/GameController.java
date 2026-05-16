@@ -7,14 +7,11 @@
 package monkeysdynamite.wildinvaders.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import monkeysdynamite.wildinvaders.controllers.Controllers;
-import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.config.GameConfig;
 import monkeysdynamite.wildinvaders.entities.Player;
-import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.managers.AssetManager;
 import monkeysdynamite.wildinvaders.game.managers.GameManager;
 import monkeysdynamite.wildinvaders.game.tools.RenderTool;
@@ -48,7 +45,7 @@ public class GameController {
         db.player = new Player(400.0f, GameConfig.GameArea.GAME_MIN_Y + 20, 48.0f, 48.0f);
 
         //INITIALIZE GAMEPLAY
-        gameManager.intializeEnemies(db);
+        gameManager.initializeEnemies(db);
         gameManager.initializeBarriers(db);
 
     }

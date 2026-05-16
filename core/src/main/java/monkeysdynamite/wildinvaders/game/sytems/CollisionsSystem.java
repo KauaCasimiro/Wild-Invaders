@@ -22,9 +22,11 @@ public class CollisionsSystem implements GameSystem {
 
         handleDynamiteEnemyCollision(db);
 
-        handleProjectileCollision(db);
+        handleProjectileBarrierCollision(db);
 
         handleProjectilePlayerCollision(db);
+
+        handleProjectileCollision(db);
     }
 
     //Collison dynamite x enemies
@@ -88,7 +90,7 @@ public class CollisionsSystem implements GameSystem {
     }
 
     //Collison projectile x barrier
-    private void handleProjectileCollision(GameDatabase db) {
+    private void handleProjectileBarrierCollision(GameDatabase db) {
         for (Projectile p : db.projectiles) {
             if (!p.isActive) {
                 continue;
@@ -116,6 +118,30 @@ public class CollisionsSystem implements GameSystem {
                 break;
             }
 
+        }
+    }
+
+    private void handleProjectileCollision(GameDatabase db) {
+        for (Projectile p : db.projectiles) {
+
+            if (!p.isActive) {
+                continue;
+            }
+
+            for (Projectile p2 : db.projectiles) {
+                if (!p2.isActive) {
+                    continue;
+                }
+
+                if (p.getType() == p2.getType()) {
+                    continue;
+                }
+
+                if (p.getBounds().overlaps(p2.getBounds())) {
+                    p.isActive = false;
+                    p2.isActive = false;
+                }
+            }
         }
     }
 }

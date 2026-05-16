@@ -84,10 +84,4 @@ public class RenderTool {
             batch.draw(barrierFrame, barrier.x, barrier.y, barrier.width, barrier.height);
         }
     }
-
-    /*private void renderFloatingScores (SpriteBatch batch, GameDatabase db) {
-        for (var fs : db.floatingScores) {
-            db.font.draw(batch, "+" + fs.value + fs.bonusText, fs.x, fs.y);
-        }
-    }*/
 }

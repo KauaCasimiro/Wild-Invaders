@@ -37,6 +37,10 @@ public class ScoreSystem implements GameSystem {
         db.score += score;
         db.lastScoreGain = score;
 
+        if (db.score > db.highScore) {
+            db.highScore += score;
+        }
+
         FloatingScore floatingScore = new FloatingScore();
 
         floatingScore.x = enemy.x;

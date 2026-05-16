@@ -111,6 +111,7 @@ public class FirstScreen implements Screen {
 
         batch.begin();
         debugTool.renderHudDebug(batch, font, db);
+        debugTool.renderWaveMessage(batch, font, db);
 
         float lifeSize = 38f;
         float padding = 10f;

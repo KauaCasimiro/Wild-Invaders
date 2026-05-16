@@ -43,6 +43,8 @@ public class GameManager {
 
         systems.add(new BarrierSystem());
 
+        systems.add(new WaveSystem());
+
         //Cleaning system
         systems.add(new CleanupSystem());
     }
@@ -51,9 +53,16 @@ public class GameManager {
         for (GameSystem system : systems) {
             system.update(db, delta);
         }
+
+        if (db.requestNextWave) {
+            initializeEnemies(db);
+
+            db.requestNextWave = false;
+            db.waveTransition = false;
+        }
     }
 
-    public void intializeEnemies(GameDatabase db) {
+    public void initializeEnemies(GameDatabase db) {
         db.enemies.clear();
 
         int rows = 6;

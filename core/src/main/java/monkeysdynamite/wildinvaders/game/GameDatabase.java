@@ -30,7 +30,6 @@ public class GameDatabase {
 
     public int formationDirection = 1;
 
-
     public float enemyShootTimer = 0f;
     public float enemyShootCooldown = 1.0f;
     public int maxEnemyProjectiles = 3;
@@ -62,8 +61,13 @@ public class GameDatabase {
     public int score = 0;
     public int lastScoreGain = 0;
     public int highScore = 0;
-
     public int scoreTier = 0;
+
+    //WAVE
+    public int wave = 1;
+    public boolean waveTransition = false;
+    public float waveTransitionTimer = 0f;
+    public boolean requestNextWave = false;
 
     public ScoreRange tractorScoreRange = new ScoreRange(10, 80);
     public ScoreRange farmerScoreRange = new ScoreRange(90, 150);
