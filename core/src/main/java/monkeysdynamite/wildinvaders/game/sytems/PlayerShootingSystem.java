@@ -21,7 +21,7 @@ public class PlayerShootingSystem implements GameSystem {
             }
         }
 
-        if (db.shoot && !hasDynamite) {
+        if (db.shoot && (!hasDynamite || db.debugInfiniteShoot)) {
             db.player.isAttacking = true;
             db.player.attackTimer = 0f;
 

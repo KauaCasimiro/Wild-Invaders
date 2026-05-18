@@ -1,6 +1,7 @@
 package monkeysdynamite.wildinvaders.game.tools;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -129,4 +130,39 @@ public class DebugTool {
             font.draw(batch, "+" + fs.value + fs.bonusText, fs.x, fs.y);
         }
     }
+    public void updateDebugInput(GameDatabase db) {
+
+        // REMOVE LIMITAÇÃO DE TIRO
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+
+            db.debugInfiniteShoot = true;
+
+            System.out.println("DEBUG: Infinite Shoot ON");
+        }
+
+        // VOLTA LIMITAÇÃO
+        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+
+            db.debugInfiniteShoot = false;
+
+            System.out.println("DEBUG: Infinite Shoot OFF");
+        }
+
+        // REMOVE VIDA
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+
+            db.playerLives--;
+
+            System.out.println("DEBUG: -1 Life");
+        }
+
+        // ADICIONA VIDA
+        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+
+            db.playerLives++;
+
+            System.out.println("DEBUG: +1 Life");
+        }
+    }
+
 }

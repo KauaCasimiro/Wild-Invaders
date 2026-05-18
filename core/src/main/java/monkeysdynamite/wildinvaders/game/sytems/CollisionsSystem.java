@@ -80,8 +80,6 @@ public class CollisionsSystem implements GameSystem {
                 if (db.playerLives <= 0) {
                     db.player.isAlive = false;
                     db.isGameOver = true;
-                    JOptionPane.showMessageDialog(null, "Game Over");
-                    Gdx.app.exit();
                 }
                 p.isActive = false;
                 break;

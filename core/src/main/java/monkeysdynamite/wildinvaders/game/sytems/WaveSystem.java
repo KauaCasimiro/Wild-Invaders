@@ -31,6 +31,7 @@ public class WaveSystem implements GameSystem {
 
     private void starWaveTransition(GameDatabase db) {
         db.wave++;
+        db.runStats.finalWave = db.wave;
         db.waveTransition = true;
         db.waveTransitionTimer = 0f;
     }

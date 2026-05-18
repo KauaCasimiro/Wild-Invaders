@@ -35,11 +35,29 @@ public class ScoreSystem implements GameSystem {
         }
 
         db.score += score;
+        db.runStats.finalScore = db.score;
         db.lastScoreGain = score;
 
         if (db.score > db.highScore) {
             db.highScore += score;
+            db.runStats.highScore = db.highScore;
         }
+
+        switch (enemy.getType()) {
+            case TRACTOR:
+                db.runStats.tractorsKilled++;
+                break;
+            case FARMER:
+                db.runStats.farmersKilled++;
+                break;
+            case MINER:
+                db.runStats.minersKilled++;
+                break;
+            default:
+                break;
+        }
+
+        db.runStats.totalEnemiesKilled++;
 
         FloatingScore floatingScore = new FloatingScore();
 

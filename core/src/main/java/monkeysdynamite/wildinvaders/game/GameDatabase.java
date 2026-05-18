@@ -17,6 +17,7 @@ import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.managers.AssetManager;
 import monkeysdynamite.wildinvaders.game.tools.FloatingScore;
 import monkeysdynamite.wildinvaders.game.tools.ScoreRange;
+import monkeysdynamite.wildinvaders.game.RunStats;
 
 public class GameDatabase {
 
@@ -27,6 +28,8 @@ public class GameDatabase {
     public List<Barrier> barriers;
 
     public Controllers controllers;
+
+    public RunStats runStats = new RunStats();
 
     public int formationDirection = 1;
 
@@ -43,6 +46,7 @@ public class GameDatabase {
     public Map<Integer, Enemy> frontEnemyByColumn = new HashMap<>();
 
     public int playerLives = 3;
+    public boolean debugInfiniteShoot = false;
 
     public boolean isGameOver = false;
 

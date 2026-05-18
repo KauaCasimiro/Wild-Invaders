@@ -17,6 +17,7 @@ public class DifficultySystem implements GameSystem {
 
     private void updateGameTime(GameDatabase db, float delta) {
         db.gameTime += delta;
+        db.runStats.totalGameTime = db.gameTime;
     }
 
     private int countAliveEnemies(GameDatabase db) {

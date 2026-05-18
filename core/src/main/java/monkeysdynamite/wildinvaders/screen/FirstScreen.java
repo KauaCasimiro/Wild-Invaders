@@ -1,10 +1,9 @@
-package monkeysdynamite.wildinvaders;
+package monkeysdynamite.wildinvaders.screen;
 
 //Imports LibGDX
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,14 +11,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 //Imports packages
+import monkeysdynamite.wildinvaders.Main;
 import monkeysdynamite.wildinvaders.config.GameCamera;
 import monkeysdynamite.wildinvaders.config.GameConfig;
-import monkeysdynamite.wildinvaders.entities.Enemy;
-import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameController;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
 import monkeysdynamite.wildinvaders.game.tools.DebugTool;
-import monkeysdynamite.wildinvaders.game.tools.FloatingScore;
 import monkeysdynamite.wildinvaders.hud.HudCamera;
 import monkeysdynamite.wildinvaders.hud.MobileHud;
 
@@ -37,6 +34,12 @@ public class FirstScreen implements Screen {
     private DebugTool debugTool;
     private GameCamera gameCamera;
     private HudCamera hudCamera;
+
+    private Main game;
+
+    public FirstScreen(Main game) {
+        this.game = game;
+    }
 
 
     @Override
@@ -64,8 +67,8 @@ public class FirstScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //----- INPUT DESKTOP -----
-        boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.A);
-        boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.D);
+        boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.D)  || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         boolean keyShoot = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
 
         //----- INPUT MOBILE -----
@@ -88,7 +91,16 @@ public class FirstScreen implements Screen {
 
         //-----UPDATE GAME-----
         gameController.update(left, right, shoot);
+        debugTool.updateDebugInput(db);
         //-----UPDATE GAME-----
+
+        if (db.isGameOver) {
+            game.setScreen(new GameOverScreen(game, db.runStats));
+
+            dispose();
+
+            return;
+        }
 
         //-----GAME CAMERA-----
         gameCamera.apply();
