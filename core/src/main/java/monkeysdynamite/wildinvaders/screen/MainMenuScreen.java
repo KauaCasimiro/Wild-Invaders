@@ -27,9 +27,11 @@ public class MainMenuScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
         Label title = new Label("Wild Invaders", skin);
+        title.setFontScale(2.5f);
         table.add(title).padBottom(20);
 
         TextButton playButton = new TextButton("Play", skin);
+        playButton.getLabel().setFontScale(2.5f);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

@@ -20,8 +20,8 @@ public class GameConfig {
     }
 
     public static class HudConfig {
-        public static final float HUD_TOP_HEIGHT = 80f;
-        public static final float HUD_BOTTOM_HEIGHT = 80f;
+        public static final float HUD_TOP_HEIGHT = 68f;
+        public static final float HUD_BOTTOM_HEIGHT = 68f;
     }
 
     public static class GameArea {

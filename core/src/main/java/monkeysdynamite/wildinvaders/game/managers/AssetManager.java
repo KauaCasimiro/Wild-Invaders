@@ -16,8 +16,12 @@ public class AssetManager {
 
     //-----ENEMIES-----
     public Texture tractorTexture;
+    public Animation<TextureRegion> tractorAnimation;
+
     public Texture farmerTexture;
+    public Animation<TextureRegion> farmerAnimation;
     public Texture minerTexture;
+    public Animation<TextureRegion> minerAnimation;
 
     //-----PROJECTILES-----
     public Texture dynamiteTexture;
@@ -29,6 +33,9 @@ public class AssetManager {
     public Texture barrierDamaged;
     public Animation<TextureRegion> barrierHitAnimation;
 
+    // -----BACKGROUNDS-----
+    public Texture bgTexture;
+
     public AssetManager() {
         load();
     }
@@ -39,8 +46,11 @@ public class AssetManager {
         playerAttackAnimation = new Animation<>(0.08f, toRegions(playerAttackFrames));
 
         tractorTexture = new Texture(Gdx.files.internal("enemies/trator.png"));
+        tractorAnimation = AnimationLoader.load("enemies/tractor/tractor_", 5, 0.15f);
         farmerTexture = new Texture(Gdx.files.internal("enemies/fazendeiro.png"));
+        farmerAnimation = AnimationLoader.load("enemies/farmer/farmer_idle_", 6, 0.15f);
         minerTexture = new Texture(Gdx.files.internal("enemies/garimpeiro.png"));
+        minerAnimation = AnimationLoader.load("enemies/miner/miner_idle_", 6, 0.15f);
 
         dynamiteTexture = new Texture(Gdx.files.internal("projectiles/dynamite.png"));
         bulletTexture = new Texture(Gdx.files.internal("projectiles/bullet.png"));
@@ -51,6 +61,8 @@ public class AssetManager {
 
         Texture[] hitFrames = loadAnimationFrames("barrier/hit/stem_hit_", 5);
         barrierHitAnimation = new Animation<>(0.08f, toRegions(hitFrames));
+
+        bgTexture = new Texture(Gdx.files.internal("backgrounds/forest_bg.png"));
     }
 
     private Texture[] loadAnimationFrames(String pathPreFix, int totalFrames) {
@@ -81,5 +93,6 @@ public class AssetManager {
         dynamiteTexture.dispose();
         bulletTexture.dispose();
         pickaxeTexture.dispose();
+        bgTexture.dispose();
     }
 }

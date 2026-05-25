@@ -2,17 +2,22 @@ package monkeysdynamite.wildinvaders.game.tools;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import monkeysdynamite.wildinvaders.config.GameConfig;
 import monkeysdynamite.wildinvaders.entities.Barrier;
 import monkeysdynamite.wildinvaders.entities.Enemy;
-import monkeysdynamite.wildinvaders.entities.Player;
 import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
+import monkeysdynamite.wildinvaders.hud.HudCamera;
+import monkeysdynamite.wildinvaders.hud.MobileHud;
 
 
 public class DebugTool {
@@ -50,7 +55,9 @@ public class DebugTool {
 
     public void renderHudAreas(ShapeRenderer shapeRenderer, OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 1f);
 
         shapeRenderer.rect(0, GameConfig.WorldConfig.WORLD_HEIGHT - GameConfig.HudConfig.HUD_TOP_HEIGHT,  GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.HudConfig.HUD_TOP_HEIGHT);
 
@@ -130,6 +137,115 @@ public class DebugTool {
             font.draw(batch, "+" + fs.value + fs.bonusText, fs.x, fs.y);
         }
     }
+
+    public void renderMobileHudDebug(ShapeRenderer shapeRenderer, HudCamera hudCamera, MobileHud mobile) {
+        if (mobile == null) {
+            return;
+        }
+        shapeRenderer.setProjectionMatrix(hudCamera.getCamera().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        // LEFT BUTTON
+        shapeRenderer.setColor(
+            mobile.isLeftPressed ? Color.GREEN : Color.DARK_GRAY
+        );
+
+        Circle left = mobile.getLeftButton();
+
+        shapeRenderer.circle(left.x, left.y, left.radius);
+
+        // RIGHT BUTTON
+        shapeRenderer.setColor(
+            mobile.isRightPressed ? Color.GREEN : Color.GRAY
+        );
+
+        Circle right = mobile.getRightButton();
+
+        shapeRenderer.circle(right.x, right.y, right.radius);
+        // SHOOT BUTTON
+        shapeRenderer.setColor(
+            mobile.isShootPressed ? Color.GREEN : Color.RED
+        );
+
+        Circle shoot = mobile.getShootButton();
+
+        shapeRenderer.circle(shoot.x, shoot.y, shoot.radius);
+
+        // TOUCH POSITION
+        if (Gdx.input.isTouched()) {
+
+            Vector3 touch = new Vector3(
+                Gdx.input.getX(),
+                Gdx.input.getY(),
+                0
+            );
+
+            hudCamera.getViewport().unproject(touch);
+
+            shapeRenderer.setColor(Color.MAGENTA);
+
+            float size = 20f;
+
+            shapeRenderer.line(
+                touch.x - size,
+                touch.y,
+                touch.x + size,
+                touch.y
+            );
+
+            shapeRenderer.line(
+                touch.x,
+                touch.y - size,
+                touch.x,
+                touch.y + size
+            );
+
+            // TOUCH AREA
+            shapeRenderer.circle(touch.x, touch.y, 30f);
+        }
+
+        shapeRenderer.end();
+    }
+
+    public void renderMobileInputText (SpriteBatch batch, BitmapFont font, HudCamera hudCamera, MobileHud mobile) {
+        if (mobile == null) {
+            return;
+        }
+
+        Vector3 touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+
+        hudCamera.getViewport().unproject(touch);
+
+        float x = 20f;
+        float y = 200f;
+
+        font.draw(batch, "=== MOBILE DEBUG ===", x, y);
+        y -= 25;
+
+        font.draw(batch, "Touched: " + Gdx.input.isTouched(), x, y);
+        y -= 25;
+
+        font.draw(batch, "Screen X: " + Gdx.input.getX(), x, y);
+        y -= 25;
+
+        font.draw(batch, "Screen Y: " + Gdx.input.getY(), x, y);
+        y -= 25;
+
+        font.draw(batch, "HUD X: " + (int) touch.x, x, y);
+        y -= 25;
+
+        font.draw(batch, "HUD Y: " + (int) touch.y, x, y);
+        y -= 25;
+
+        font.draw(batch, "LEFT: " + mobile.isLeftPressed, x, y);
+        y -= 25;
+
+        font.draw(batch, "RIGHT: " + mobile.isRightPressed, x, y);
+        y -= 25;
+
+        font.draw(batch, "SHOOT: " + mobile.isShootPressed, x, y);
+    }
+
     public void updateDebugInput(GameDatabase db) {
 
         // REMOVE LIMITAÇÃO DE TIRO

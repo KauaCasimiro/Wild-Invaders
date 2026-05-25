@@ -36,6 +36,7 @@ public class GameOverScreen implements Screen {
         stage.addActor(table);
 
         Label gameOverLabel = new Label("Game Over", skin);
+
         table.add(gameOverLabel);
         table.row();
 

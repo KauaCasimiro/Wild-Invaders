@@ -22,13 +22,22 @@ public class EnemyFormationSystem implements GameSystem {
 
             for (Enemy enemy : db.enemies) {
                 enemy.y -= 20;
-                enemy.setDirection(db.formationDirection);
+            }
+        }
+
+        for (Enemy enemy : db.enemies) {
+            if (!enemy.isShooting) {
+                if (db.formationDirection > 0) {
+                    enemy.rotation = 90;
+                } else {
+                    enemy.rotation = 270;
+                }
             }
         }
 
         for (Enemy enemy :  db.enemies) {
             enemy.x += db.formationSpeed * db.formationDirection * delta;
-            enemy.update();
+            enemy.update(delta);
         }
     }
 }

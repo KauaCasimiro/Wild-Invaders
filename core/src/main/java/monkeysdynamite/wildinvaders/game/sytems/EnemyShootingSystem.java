@@ -38,9 +38,15 @@ public class EnemyShootingSystem implements GameSystem{
 
 
         for (Enemy e : db.enemies) {
-            if (e.isAlive) {
-                aliveEnemies.add(e);
+            if (!e.isAlive) {
+                continue;
             }
+
+            if (e.getProjectileType() == null) {
+                continue;
+            }
+
+            aliveEnemies.add(e);
         }
         if (aliveEnemies.isEmpty()) {
             return;
@@ -48,8 +54,15 @@ public class EnemyShootingSystem implements GameSystem{
 
         int index = (int) (Math.random() * aliveEnemies.size());
         Enemy shooter = aliveEnemies.get(index);
+        shooter.isShooting = true;
+        shooter.shootVisualTimer = 0.25f;
+        shooter.rotation = 0;
 
         Projectile.ProjectileType type = shooter.getProjectileType();
+
+        if (type == null) {
+            return;
+        }
 
         Texture texture;
 

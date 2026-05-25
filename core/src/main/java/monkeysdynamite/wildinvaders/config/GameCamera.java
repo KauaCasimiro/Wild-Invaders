@@ -31,4 +31,8 @@ public class GameCamera {
     public OrthographicCamera getCamera() {
         return camera;
     }
+
+    public Viewport getViewport() {
+        return viewport;
+    }
 }

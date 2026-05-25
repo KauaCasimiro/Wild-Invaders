@@ -47,10 +47,27 @@ public class RenderTool {
                 continue;
             }
 
+            TextureRegion frame = null;
+
+            switch (enemy.getType()) {
+                case TRACTOR:
+                    frame = db.assets.tractorAnimation.getKeyFrame(enemy.animationTimer, true);
+                    break;
+
+                case FARMER:
+                    frame = db.assets.farmerAnimation.getKeyFrame(enemy.animationTimer, true);
+                    break;
+
+                case MINER:
+                    frame = db.assets.minerAnimation.getKeyFrame(enemy.animationTimer, true);
+                    break;
+            }
+
+            enemy.getSprite().setRegion(frame);
             enemy.getSprite().setPosition(enemy.x, enemy.y);
-
             enemy.getSprite().setSize(enemy.width, enemy.height);
-
+            enemy.getSprite().setOriginCenter();
+            enemy.getSprite().setRotation(enemy.rotation);
             enemy.getSprite().draw(batch);
         }
 

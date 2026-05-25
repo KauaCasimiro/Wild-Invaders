@@ -29,4 +29,8 @@ public class HudCamera {
     public OrthographicCamera getCamera() {
         return camera;
     }
+
+    public Viewport getViewport() {
+        return viewport;
+    }
 }

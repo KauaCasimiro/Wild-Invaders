@@ -18,6 +18,10 @@ public class Enemy {
     public int rowIndex;
     public int columnIndex;
 
+    public float animationTimer;
+    public float rotation;
+    public boolean isShooting;
+    public float shootVisualTimer;
     public enum EnemyType {
         TRACTOR,
         FARMER,
@@ -38,17 +42,8 @@ public class Enemy {
 
         sprite = new Sprite(texture);
 
-        switch (type) {
-            case TRACTOR:
-                sprite = new Sprite(texture);
-            break;
-            case FARMER:
-                sprite = new Sprite(texture);
-            break;
-            case MINER:
-                sprite = new Sprite(texture);
-            break;
-        }
+        rotation = 90;
+
 
         bounds = new Rectangle(x, y, width, height);
     }
@@ -87,12 +82,24 @@ public class Enemy {
             case MINER:
                 return Projectile.ProjectileType.PICKAXE;
 
-            default:
-                return Projectile.ProjectileType.BULLET;
+            case TRACTOR:
+                return null;
         }
+        return null;
     }
 
-    public void update() {
+    public void update(float delta) {
         bounds.setPosition(x, y);
+        animationTimer += delta;
+
+        if (isShooting) {
+            shootVisualTimer -= delta;
+            if (shootVisualTimer <= 0) {
+                isShooting = false;
+            }
+        }
+
+        sprite.setBounds(x, y, width, height);
+
     }
 }

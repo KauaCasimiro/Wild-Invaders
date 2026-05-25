@@ -2,6 +2,7 @@ package monkeysdynamite.wildinvaders.entities;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Gdx;
+import monkeysdynamite.wildinvaders.config.GameConfig;
 
 public class Player {
     private Rectangle player;
@@ -29,6 +30,12 @@ public class Player {
         }
         if (right) {
             player.x += 200 * Gdx.graphics.getDeltaTime();
+        }
+
+        if (player.x < 0) {
+            player.x = 0;
+        } else if (player.x + player.width> GameConfig.WorldConfig.WORLD_WIDTH) {
+            player.x = GameConfig.WorldConfig.WORLD_WIDTH - player.width;
         }
 
         bounds.setPosition(player.x, player.y);

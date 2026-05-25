@@ -49,7 +49,7 @@ public class FirstScreen implements Screen {
 
 
         if (GameConfig.isMobile) {
-            mobile = new MobileHud();
+            mobile = new MobileHud(hudCamera);
         }
 
         batch = new SpriteBatch();
@@ -80,7 +80,7 @@ public class FirstScreen implements Screen {
             mobile.update();
             buttonLeft = mobile.isLeftPressed;
             buttonRight = mobile.isRightPressed;
-            buttonShoot = mobile.isShootJustPreesed;
+            buttonShoot = mobile.isShootPressed;
         }
 
         //-----UNIFY INPUT-----
@@ -108,8 +108,14 @@ public class FirstScreen implements Screen {
         batch.setProjectionMatrix(gameCamera.getCamera().combined);
         //-----GAME CAMERA-----
 
+        float gameplayY = GameConfig.HudConfig.HUD_BOTTOM_HEIGHT;
+        float gameplayHeight = GameConfig.WorldConfig.WORLD_HEIGHT -  GameConfig.HudConfig.HUD_TOP_HEIGHT - GameConfig.HudConfig.HUD_BOTTOM_HEIGHT;
+
         //-----RENDER GAME-----
         batch.begin();
+
+        batch.draw(db.assets.bgTexture, 0, 0,GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.WorldConfig.WORLD_HEIGHT);
+
         gameController.render(batch);
         debugTool.renderFloatingScores(batch, font, db);
         batch.end();
@@ -120,10 +126,13 @@ public class FirstScreen implements Screen {
         hudCamera.apply();
         batch.setProjectionMatrix(hudCamera.getCamera().combined);
         debugTool.renderHudAreas(shapeRenderer, hudCamera.getCamera());
+        //debugTool.renderMobileHudDebug(shapeRenderer, hudCamera, mobile);
+
 
         batch.begin();
         debugTool.renderHudDebug(batch, font, db);
         debugTool.renderWaveMessage(batch, font, db);
+        //debugTool.renderMobileInputText(batch, font, hudCamera, mobile);
 
         float lifeSize = 38f;
         float padding = 10f;
@@ -135,7 +144,7 @@ public class FirstScreen implements Screen {
 
         for (int i = 0; i < db.playerLives; i++) {
 
-            batch.draw(playerFrame, startX + i * (lifeSize + padding), startY, lifeSize, lifeSize);
+            batch.draw(playerFrame, (startX + 500f) + i * (lifeSize + padding), startY, lifeSize, lifeSize);
         }
         batch.end();
         //-----MOBILE HUD-----
