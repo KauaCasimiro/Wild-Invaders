@@ -40,6 +40,7 @@ public class GameManager {
         //Combat system
         systems.add(new ProjectileMovementSystem());
         systems.add(new CollisionsSystem(scoreSystem));
+        systems.add(new EffectSystem());
 
         systems.add(new BarrierSystem());
 

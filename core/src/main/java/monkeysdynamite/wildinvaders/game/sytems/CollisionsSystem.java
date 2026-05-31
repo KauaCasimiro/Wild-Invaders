@@ -1,10 +1,7 @@
 package monkeysdynamite.wildinvaders.game.sytems;
 
-import javax.swing.JOptionPane;
-
-import com.badlogic.gdx.Gdx;
-
 import monkeysdynamite.wildinvaders.entities.Barrier;
+import monkeysdynamite.wildinvaders.entities.EffectParticle;
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
@@ -27,6 +24,8 @@ public class CollisionsSystem implements GameSystem {
         handleProjectilePlayerCollision(db);
 
         handleProjectileCollision(db);
+
+        handleEnemyPlayerCollison(db);
     }
 
     //Collison dynamite x enemies
@@ -54,6 +53,13 @@ public class CollisionsSystem implements GameSystem {
 
                 if (front == enemy) {
                     scoreSystem.onEnemyKilled(enemy, db);
+                    for(int i = 0; i < 10; i++) {
+                        float vx = (float)(Math.random() * 100f - 50f);
+                        float vy = (float)(Math.random() * 100f - 50f);
+
+                        db.particles.add(new EffectParticle(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, vx, vy, 0.4f));    
+                    }
+
                     enemy.isAlive = false;
                     p.isActive = false;
                 } else {
@@ -77,11 +83,28 @@ public class CollisionsSystem implements GameSystem {
 
             if (p.getBounds().overlaps(db.player.getBounds())) {
                 db.playerLives--;
+                db.playerDamageFlash = true;
+                db.playerFlashTimer = 0f;
                 if (db.playerLives <= 0) {
                     db.player.isAlive = false;
                     db.isGameOver = true;
                 }
                 p.isActive = false;
+                break;
+            }
+        }
+    }
+
+    private void handleEnemyPlayerCollison(GameDatabase db) {
+        for (Enemy enemy : db.enemies) {
+            if (!enemy.isAlive) {
+                continue;
+            }
+
+            if (enemy.getBounds().overlaps(db.player.getBounds())) {
+                db.playerLives = 0;
+                db.player.isAlive = false;
+                db.isGameOver = true;
                 break;
             }
         }

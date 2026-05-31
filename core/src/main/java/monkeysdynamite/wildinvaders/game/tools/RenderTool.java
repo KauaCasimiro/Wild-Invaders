@@ -2,11 +2,13 @@ package monkeysdynamite.wildinvaders.game.tools;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import monkeysdynamite.wildinvaders.entities.Barrier;
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
+import monkeysdynamite.wildinvaders.entities.EffectParticle;
 
 public class RenderTool {
     public void render (SpriteBatch batch, GameDatabase db) {
@@ -26,6 +28,13 @@ public class RenderTool {
 
         if (!db.player.isAlive) {
             return;
+        }
+
+        if (db.playerDamageFlash) {
+
+            if ((int) (db.player.invulnerableTimer * 20) % 2 == 0) {
+                return;
+            }
         }
 
         TextureRegion playerFrame;
@@ -89,6 +98,7 @@ public class RenderTool {
                 continue;
             }
 
+
             TextureRegion barrierFrame;
 
             if(barrier.isHit) {
@@ -100,5 +110,20 @@ public class RenderTool {
             }
             batch.draw(barrierFrame, barrier.x, barrier.y, barrier.width, barrier.height);
         }
+    }
+
+    public void renderParticles(ShapeRenderer shapeRenderer, GameDatabase db) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        for (EffectParticle p : db.particles) {
+
+            if (!p.isActive) {
+                continue;
+            }
+
+            shapeRenderer.rect(p.x, p.y, 4, 4);
+        }
+
+        shapeRenderer.end();
     }
 }

@@ -15,6 +15,9 @@ public class Player {
     public boolean isAttacking;
     public float attackTimer = 0f;
 
+    public boolean isInvunerable;
+    public float invulnerableTimer;
+
     public Player(float x, float y, float width, float height) {
 
         player = new Rectangle(x, y, width, height);

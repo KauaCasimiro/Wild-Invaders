@@ -108,18 +108,17 @@ public class FirstScreen implements Screen {
         batch.setProjectionMatrix(gameCamera.getCamera().combined);
         //-----GAME CAMERA-----
 
-        float gameplayY = GameConfig.HudConfig.HUD_BOTTOM_HEIGHT;
-        float gameplayHeight = GameConfig.WorldConfig.WORLD_HEIGHT -  GameConfig.HudConfig.HUD_TOP_HEIGHT - GameConfig.HudConfig.HUD_BOTTOM_HEIGHT;
-
         //-----RENDER GAME-----
         batch.begin();
 
         batch.draw(db.assets.bgTexture, 0, 0,GameConfig.WorldConfig.WORLD_WIDTH, GameConfig.WorldConfig.WORLD_HEIGHT);
 
         gameController.render(batch);
-        debugTool.renderFloatingScores(batch, font, db);
         batch.end();
         //-----RENDER GAME-----
+
+        shapeRenderer.setProjectionMatrix(gameCamera.getCamera().combined);
+        gameController.renderEffect(shapeRenderer);
 
         debugTool.renderColliders(shapeRenderer, gameCamera.getCamera(), db);
 

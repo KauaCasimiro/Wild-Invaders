@@ -2,6 +2,7 @@ package monkeysdynamite.wildinvaders.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import monkeysdynamite.wildinvaders.controllers.Controllers;
 import monkeysdynamite.wildinvaders.config.GameConfig;
@@ -59,6 +60,10 @@ public class GameController {
     public void render(SpriteBatch batch) {
 
         renderTool.render(batch, db);
+    }
+
+    public void renderEffect(ShapeRenderer shapeRenderer) {
+        renderTool.renderParticles(shapeRenderer, db);
     }
 
     public void dispose() {

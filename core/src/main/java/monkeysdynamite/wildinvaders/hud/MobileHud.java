@@ -57,25 +57,29 @@ public class MobileHud {
         isRightPressed = false;
         isShootPressed = false;
 
-        if (!Gdx.input.isTouched()) {
-            return;
-        }
 
-        // TOUCH IN SCREEN SPACE
-        Vector3 touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(),0);
+        for (int i = 0; i < 10; i++) {
+            if (!Gdx.input.isTouched(i)) {
+                return;
+            }
 
-        // CONVERT SCREEN -> HUD WORLD
-        hudCamera.getViewport().unproject(touch);
+            // TOUCH IN SCREEN SPACE
+            Vector3 touch = new Vector3(Gdx.input.getX(i), Gdx.input.getY(i),0);
 
-        if (leftButton.contains(touch.x, touch.y)) { // LEFT BUTTON
+            // CONVERT SCREEN -> HUD WORLD
+            hudCamera.getViewport().unproject(touch);
 
-            isLeftPressed = true;
-        } else if (rightButton.contains(touch.x, touch.y)) { // RIGHT BUTTON
+            if (leftButton.contains(touch.x, touch.y)) { // LEFT BUTTON
+                isLeftPressed = true;
+            }
 
-            isRightPressed = true;
-        } else if (shootButton.contains(touch.x, touch.y)) { // SHOOT BUTTON
+            if (rightButton.contains(touch.x, touch.y)) { // RIGHT BUTTON
+                isRightPressed = true;
+            }
 
-            isShootPressed = true;
+            if (shootButton.contains(touch.x, touch.y)) { // SHOOT BUTTON
+                isShootPressed = true;
+            }
         }
     }
 

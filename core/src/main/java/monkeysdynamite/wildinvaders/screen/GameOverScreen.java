@@ -28,48 +28,91 @@ public class GameOverScreen implements Screen {
     public GameOverScreen(Main game,  RunStats stats) {
         this.game = game;
         this.stats = stats;
+
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 
         Table table = new Table();
         table.setFillParent(true);
+        table.center();
+
         stage.addActor(table);
 
+        //GAME OVER TITLE
+
         Label gameOverLabel = new Label("Game Over", skin);
+        gameOverLabel.setFontScale(2.5f);
 
-        table.add(gameOverLabel);
+        table.add(gameOverLabel).padBottom(15);
         table.row();
 
-        Label scoreLabel = new Label("Score: " + stats.finalScore, skin);
-        table.add(scoreLabel).padTop(20);
+        Label titleLine = new Label("================================", skin);
+        
+        table.add(titleLine).padBottom(15);
         table.row();
 
-        Label highScoreLabel = new Label("High Score: " + stats.highScore, skin);
-        table.add(highScoreLabel).padTop(20);
+        //SCORE
+        Label scoreLabel = new Label("Score: ", skin);
+        scoreLabel.setFontScale(1.3f);
+        table.add(scoreLabel).padTop(15);
         table.row();
 
-        Label wave = new Label("Wave achieved: " + stats.finalWave, skin);
-        table.add(wave).padTop(20);
+        Label finalScoreValue = new Label (String.valueOf(stats.finalScore), skin);
+        finalScoreValue.setFontScale(2f);
+        table.add(finalScoreValue).padTop(15);
         table.row();
 
-        Label time = new Label("Total Time: " + stats.totalGameTime, skin);
-        table.add(time).padTop(20);
+
+        Label highScoreLabel = new Label("High Score: ", skin);
+        highScoreLabel.setFontScale(1.3f);
+        table.add(highScoreLabel).padTop(15);
         table.row();
 
-        Label totalKills = new Label("Total enemies killed: " + stats.totalEnemiesKilled, skin);
-        table.add(totalKills).padTop(20);
+        Label highScoreValue = new Label(String.valueOf(stats.highScore), skin);
+        highScoreValue.setFontScale(2f);
+        table.add(highScoreValue).padTop(15);
         table.row();
 
-        Label tractorsKilled = new Label("Tractors killed: " + stats.tractorsKilled, skin);
-        table.add(tractorsKilled).padTop(20);
+        //DIVIDER
+        Label divider1 = new Label("--------------------------------", skin);
+        table.add(divider1).padTop(15);
         table.row();
 
-        Label farmersKilled = new Label("Farmers killed: " + stats.farmersKilled, skin);
-        table.add(farmersKilled).padTop(20);
+        //TIMER
+        Label time = new Label("Total Time: ", skin);
+        time.setFontScale(1.3f);
+        table.add(time).padTop(15);
         table.row();
 
-        Label minersKilled = new Label("Miners killed: " + stats.minersKilled, skin);
-        table.add(minersKilled).padTop(20);
+        int totalSeconds = (int) stats.totalGameTime;
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        String timeFormatted = String.format("%02d:%02d", minutes, seconds);
+
+        Label timeValue = new Label(timeFormatted, skin);
+        timeValue.setFontScale(2f);
+        table.add(timeValue).padTop(10);
+        table.row();
+
+        //STATS 
+        table.add(new Label("Wave Reached: " + stats.finalWave, skin)).padBottom(15).padTop(15);
+        table.row();
+
+        table.add(new Label("Enemies Defeated:" + stats.totalEnemiesKilled, skin)).padBottom(15);
+        table.row();
+
+        table.add(new Label("Tractors: " + stats.tractorsKilled, skin)).padBottom(5f);
+        table.row();
+
+        table.add(new Label("Farmers: " + stats.farmersKilled, skin)).padBottom(5f);
+        table.row();
+
+        table.add(new Label ("Miners: " + stats.minersKilled, skin)).padBottom(5f);
+        table.row();
+
+        // DIVIDER
+        Label divider2 = new Label("--------------------------------", skin);
+        table.add(divider2).padTop(20);
         table.row();
 
         TextButton playButton = new TextButton("Play Again", skin);
@@ -79,8 +122,8 @@ public class GameOverScreen implements Screen {
                 game.setScreen(new FirstScreen(game));
             }
         });
+        table.add(playButton).width(250).height(60).padBottom(15);
         table.row();
-        table.add(playButton).padTop(20);
 
         TextButton backButton = new TextButton("Back", skin);
         backButton.addListener(new ClickListener() {
@@ -90,7 +133,7 @@ public class GameOverScreen implements Screen {
             }
         });
         table.row();
-        table.add(backButton).padTop(20);
+        table.add(backButton).width(250).height(60);
 
         Gdx.input.setInputProcessor(stage);
     }

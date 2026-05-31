@@ -18,6 +18,7 @@ import monkeysdynamite.wildinvaders.game.managers.AssetManager;
 import monkeysdynamite.wildinvaders.game.tools.FloatingScore;
 import monkeysdynamite.wildinvaders.game.tools.ScoreRange;
 import monkeysdynamite.wildinvaders.game.RunStats;
+import monkeysdynamite.wildinvaders.entities.EffectParticle;
 
 public class GameDatabase {
 
@@ -82,11 +83,16 @@ public class GameDatabase {
 
     public ArrayList<FloatingScore> floatingScores = new ArrayList<>();
 
+    public float playerFlashTimer = 0f;
+    public boolean playerDamageFlash = false;
+    public ArrayList<EffectParticle> particles;
+
     public GameDatabase() {
         enemies = new ArrayList<>();
         projectiles = new ArrayList<>();
         controllers = new Controllers();
         barriers = new ArrayList<>();
+        particles = new ArrayList<>();
     }
 
     public int getColumn(float x) {
