@@ -66,13 +66,37 @@ public class DebugTool {
         shapeRenderer.end();
     }
     public void renderHudDebug(SpriteBatch batch, BitmapFont font, GameDatabase db) {
-        float topY = GameConfig.WorldConfig.WORLD_HEIGHT - 10;
+        float topY = GameConfig.WorldConfig.WORLD_HEIGHT - 20;
 
-        float x = 10;
+        float x = 30;
 
-        //TIME
-        font.draw(batch, "Time: " + (int) db.gameTime, x, topY);
-        x += 120;
+        //SCORE
+        font.draw(batch, "Score ", x, topY);
+        boolean blink = ((int)(db.scoreBonusFlashTimer * 20)) % 2 == 0;
+
+        if (db.scoreBonusFlash && blink) {
+            font.setColor(Color.YELLOW);
+        } else {
+            font.setColor(Color.WHITE);
+        }
+        font.draw(batch, "" + db.score, x + 50, topY - 20);
+        font.setColor(Color.WHITE);
+        x += 100;
+        
+        //HIGH SCORE
+        font.draw(batch, "Hi-Score: ", x, topY);
+        font.draw(batch, "" + db.highScore, x + 50, topY - 20);
+        x += 400;
+
+        //TITLE GAME
+        font.getData().setScale(1.5f);
+        font.draw(batch, "WILD INVADERS", x, topY);
+        font.getData().setScale(1f);
+        x += 320;
+
+        //WAVE
+        font.draw(batch, "Wave < " + db.wave + " >", x, topY);
+        x += 180;
 
         //ENEMIES ALIVE
         int aliveEnemies = 0;
@@ -85,25 +109,20 @@ public class DebugTool {
 
 
         font.draw(batch, "Alives: " + aliveEnemies, x, topY);
-        x += 120;
+        x += 140;
 
-        //SCORE
-        font.draw(batch, "Score: " + db.score, x, topY);
-        x += 120;
+        //TIME
+        font.draw(batch, "Time: " + (int) db.gameTime, x, topY);
 
-        //HIGH SCORE
-        font.draw(batch, "High Score: " + db.highScore, x, topY);
-        x += 120;
-
-        //DIFFICULTY
+        /*//DIFFICULTY
         font.draw(batch, "Difficulty: " + String.format("%.2f", db.difficultyMultiplier), x, topY);
-        x += 120;
+        x += 170;
 
         // TIME FACTOR
         float timeFactor = (int)(db.gameTime / 30) * 0.5f;
 
         font.draw(batch, "Time Factor: " + String.format("%.2f", timeFactor), x, topY);
-        x += 120;
+        x += 220;
 
         //MOVE SPEED
         font.draw(batch, "Move: " + (int) db.formationSpeed, x, topY);
@@ -111,10 +130,10 @@ public class DebugTool {
 
         //COOLDOWN
         font.draw(batch, "Cooldown: " + String.format("%.2f", db.enemyShootCooldown), x, topY);
-        x += 120;
+        x += 160;
 
         //FPS
-        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), x, topY);
+        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), x, topY);*/
     }
 
     public void renderWaveMessage(SpriteBatch batch, BitmapFont font, GameDatabase db) {
@@ -132,10 +151,12 @@ public class DebugTool {
     }
 
     public void renderFloatingScores(SpriteBatch batch, BitmapFont font, GameDatabase db) {
+        font.getData().setScale(3.2f);
         for (FloatingScore fs : db.floatingScores) {
 
             font.draw(batch, "+" + fs.value + fs.bonusText, fs.x, fs.y);
         }
+        font.getData().setScale(1f);
     }
 
     public void renderMobileHudDebug(ShapeRenderer shapeRenderer, HudCamera hudCamera, MobileHud mobile) {

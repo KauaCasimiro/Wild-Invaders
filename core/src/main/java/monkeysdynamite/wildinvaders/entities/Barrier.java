@@ -33,7 +33,7 @@ public class Barrier {
 
         this.isActive = true;
 
-        hit = 10;
+        hit = 15;
 
         bounds = new Rectangle(x, y, width, height);
     }

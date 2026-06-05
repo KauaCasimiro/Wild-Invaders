@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
-import com.badlogic.gdx.math.MathUtils;
-
 import monkeysdynamite.wildinvaders.controllers.Controllers;
 import monkeysdynamite.wildinvaders.entities.Barrier;
 import monkeysdynamite.wildinvaders.entities.Player;
@@ -17,8 +13,9 @@ import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.managers.AssetManager;
 import monkeysdynamite.wildinvaders.game.tools.FloatingScore;
 import monkeysdynamite.wildinvaders.game.tools.ScoreRange;
-import monkeysdynamite.wildinvaders.game.RunStats;
 import monkeysdynamite.wildinvaders.entities.EffectParticle;
+import monkeysdynamite.wildinvaders.game.managers.SoundManager;
+import monkeysdynamite.wildinvaders.game.sytems.LifeSystem;
 
 public class GameDatabase {
 
@@ -39,6 +36,8 @@ public class GameDatabase {
     public int maxEnemyProjectiles = 3;
 
     public AssetManager assets;
+    public SoundManager sound;
+    public LifeSystem life;
 
     public boolean left;
     public boolean right;
@@ -46,7 +45,9 @@ public class GameDatabase {
 
     public Map<Integer, Enemy> frontEnemyByColumn = new HashMap<>();
 
-    public int playerLives = 3;
+    public int playerLives;
+    public int maxPlayerLives;
+
     public boolean debugInfiniteShoot = false;
 
     public boolean isGameOver = false;
@@ -67,6 +68,9 @@ public class GameDatabase {
     public int lastScoreGain = 0;
     public int highScore = 0;
     public int scoreTier = 0;
+    public int nextLifeScore = 2000;
+    public boolean scoreBonusFlash = false;
+    public float scoreBonusFlashTimer = 0f;
 
     //WAVE
     public int wave = 1;

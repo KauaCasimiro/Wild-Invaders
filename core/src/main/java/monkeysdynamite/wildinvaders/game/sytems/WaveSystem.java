@@ -9,6 +9,7 @@ public class WaveSystem implements GameSystem {
         if (db.waveTransition) {
             db.waveTransitionTimer += delta;
 
+            db.sound.playWaveStart();
             if (db.waveTransitionTimer >= 1.5) {
                 startNextWave(db);
             }
@@ -39,6 +40,8 @@ public class WaveSystem implements GameSystem {
     private void startNextWave(GameDatabase db) {
         db.projectiles.clear();
         db.enemies.clear();
+
+        db.life.restoreFullLife(db);
 
         db.requestNextWave = true;
 

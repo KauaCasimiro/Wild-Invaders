@@ -57,11 +57,12 @@ public class CollisionsSystem implements GameSystem {
                         float vx = (float)(Math.random() * 100f - 50f);
                         float vy = (float)(Math.random() * 100f - 50f);
 
-                        db.particles.add(new EffectParticle(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, vx, vy, 0.4f));    
+                        db.particles.add(new EffectParticle(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, vx, vy, 0.4f));
                     }
 
                     enemy.isAlive = false;
                     p.isActive = false;
+                    db.sound.playHitEnemy();
                 } else {
                     p.isActive = false;
                 }
@@ -82,19 +83,20 @@ public class CollisionsSystem implements GameSystem {
             if (p.getType() == Projectile.ProjectileType.DYNAMITE) continue;
 
             if (p.getBounds().overlaps(db.player.getBounds())) {
-                db.playerLives--;
+                db.life.damagePlayer(db, 1);
+
                 db.playerDamageFlash = true;
                 db.playerFlashTimer = 0f;
-                if (db.playerLives <= 0) {
-                    db.player.isAlive = false;
-                    db.isGameOver = true;
-                }
+
+                db.sound.playHitPlayer();
+
                 p.isActive = false;
                 break;
             }
         }
     }
 
+    //Collison enemys x player
     private void handleEnemyPlayerCollison(GameDatabase db) {
         for (Enemy enemy : db.enemies) {
             if (!enemy.isAlive) {
@@ -102,7 +104,6 @@ public class CollisionsSystem implements GameSystem {
             }
 
             if (enemy.getBounds().overlaps(db.player.getBounds())) {
-                db.playerLives = 0;
                 db.player.isAlive = false;
                 db.isGameOver = true;
                 break;
@@ -128,10 +129,19 @@ public class CollisionsSystem implements GameSystem {
 
                 b.hit--;
 
+                for(int i = 0; i < 10; i++) {
+                        float vx = (float)(Math.random() * 100f - 50f);
+                        float vy = (float)(Math.random() * 100f - 50f);
+
+                        db.particles.add(new EffectParticle(b.x + b.width / 2, b.y + b.height / 2, vx, vy, 0.4f));
+                    }
+
                 b.isHit = true;
                 b.hitTimer = 0f;
 
                 p.isActive = false;
+
+                db.sound.playBarrierHit();
 
                 if (b.hit <= 0) {
                     b.isActive = false;
@@ -142,6 +152,7 @@ public class CollisionsSystem implements GameSystem {
         }
     }
 
+    //Collison projectile x projectile
     private void handleProjectileCollision(GameDatabase db) {
         for (Projectile p : db.projectiles) {
 

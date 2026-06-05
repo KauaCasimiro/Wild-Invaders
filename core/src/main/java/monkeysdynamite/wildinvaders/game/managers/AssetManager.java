@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import monkeysdynamite.wildinvaders.game.tools.AnimationLoader;
 
@@ -36,11 +38,22 @@ public class AssetManager {
     // -----BACKGROUNDS-----
     public Texture bgTexture;
 
+    // ----- FONTS -----
+    public BitmapFont smallFont;
+    public BitmapFont mediumFont;
+    public BitmapFont largeFont;
+    public BitmapFont titleFont;
+
     public AssetManager() {
         load();
     }
 
     private void load() {
+        smallFont = createFont(16);
+        mediumFont = createFont(24);
+        largeFont = createFont(32);
+        titleFont = createFont(48);
+
         playerIdleAnimation = AnimationLoader.load("player/george_idle_", 4, 0.15f);
         playerAttackFrames = loadAnimationFrames("player/attack/george_attack_", 3);
         playerAttackAnimation = new Animation<>(0.08f, toRegions(playerAttackFrames));
@@ -83,8 +96,33 @@ public class AssetManager {
         return regions;
     }
 
+    private BitmapFont createFont(int size) {
+
+        FreeTypeFontGenerator generator =
+            new FreeTypeFontGenerator(
+                Gdx.files.internal("fonts/Pix32.ttf")
+            );
+
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        parameter.size = size;
+
+        BitmapFont font = generator.generateFont(parameter);
+
+        generator.dispose();
+
+        return font;
+    }
+
     public void dispose() {
         //playerIdleAnimation.dispose();
+
+        smallFont.dispose();
+        mediumFont.dispose();
+        largeFont.dispose();
+        titleFont.dispose();
+
 
         tractorTexture.dispose();
         farmerTexture.dispose();

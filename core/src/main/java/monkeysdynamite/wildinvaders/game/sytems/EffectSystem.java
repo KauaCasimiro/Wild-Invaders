@@ -11,6 +11,7 @@ public class EffectSystem implements GameSystem {
 
         updatePlayerFlash(db, delta);
         updateParticle(db, delta);
+        updateScoreBonusFlash(db, delta);
     }
 
     private void updatePlayerFlash(GameDatabase db, float delta) {
@@ -23,6 +24,18 @@ public class EffectSystem implements GameSystem {
         if (db.playerFlashTimer >= 0.25f) {
             db.playerDamageFlash = false;
             db.playerFlashTimer = 0f;
+        }
+    }
+
+    private void updateScoreBonusFlash(GameDatabase db, float delta) {
+        if (!db.scoreBonusFlash) {
+            return;
+        }
+
+        db.scoreBonusFlashTimer += delta;
+
+        if (db.scoreBonusFlashTimer >= 0.5f) {
+            db.scoreBonusFlash = false;
         }
     }
 

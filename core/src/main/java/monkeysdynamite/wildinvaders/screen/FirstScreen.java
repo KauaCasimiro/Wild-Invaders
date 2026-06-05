@@ -54,10 +54,12 @@ public class FirstScreen implements Screen {
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        font = new BitmapFont();
+
         gameController = new GameController();
 
         db = gameController.getDb();
+
+        font = db.assets.mediumFont;
 
         debugTool = new DebugTool();
     }
@@ -129,22 +131,22 @@ public class FirstScreen implements Screen {
 
 
         batch.begin();
-        debugTool.renderHudDebug(batch, font, db);
-        debugTool.renderWaveMessage(batch, font, db);
+        debugTool.renderHudDebug(batch, db.assets.mediumFont, db);
+        debugTool.renderWaveMessage(batch, db.assets.titleFont, db);
         //debugTool.renderMobileInputText(batch, font, hudCamera, mobile);
+        debugTool.renderFloatingScores(batch, db.assets.smallFont, db);
 
         float lifeSize = 38f;
         float padding = 10f;
 
-        float startX = padding;
+        float startX = padding + 80f;
         float startY = padding;
 
         TextureRegion playerFrame = db.assets.playerIdleAnimation.getKeyFrame(db.player.animationTimer, true);
 
-        for (int i = 0; i < db.playerLives; i++) {
+        batch.draw(playerFrame, startX + 500f, startY, lifeSize, lifeSize);
+        font.draw(batch, "x " + db.playerLives, startX + 500f + lifeSize + 5f, startY + lifeSize - 5f);
 
-            batch.draw(playerFrame, (startX + 500f) + i * (lifeSize + padding), startY, lifeSize, lifeSize);
-        }
         batch.end();
         //-----MOBILE HUD-----
         if (mobile != null) {

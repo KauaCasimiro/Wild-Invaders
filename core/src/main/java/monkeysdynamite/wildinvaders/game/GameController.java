@@ -8,6 +8,7 @@ import monkeysdynamite.wildinvaders.controllers.Controllers;
 import monkeysdynamite.wildinvaders.config.GameConfig;
 import monkeysdynamite.wildinvaders.entities.Player;
 import monkeysdynamite.wildinvaders.game.managers.AssetManager;
+import monkeysdynamite.wildinvaders.game.managers.SoundManager;
 import monkeysdynamite.wildinvaders.game.managers.GameManager;
 import monkeysdynamite.wildinvaders.game.tools.RenderTool;
 
@@ -19,6 +20,8 @@ public class GameController {
     private GameManager gameManager;
 
     private AssetManager assets;
+
+    private SoundManager sounds;
 
     private RenderTool renderTool;
 
@@ -32,8 +35,11 @@ public class GameController {
 
         //MANAGERS
         assets = new AssetManager();
+        sounds = new SoundManager();
         db.assets = assets;
+        db.sound = sounds;
         gameManager = new GameManager(assets);
+        db.life = gameManager.getLifeSystem();
         renderTool = new RenderTool();
 
         //PLAYER
@@ -42,6 +48,11 @@ public class GameController {
         //INITIALIZE GAMEPLAY
         gameManager.initializeEnemies(db);
         gameManager.initializeBarriers(db);
+
+        db.playerLives = 3;
+        db.maxPlayerLives = 3;
+
+        db.sound.playGameMusic();
 
     }
 
@@ -68,6 +79,8 @@ public class GameController {
 
     public void dispose() {
        gameManager.dispose(db);
+       sounds.dispose();
+       assets.dispose();
     }
 
     public GameDatabase getDb() {

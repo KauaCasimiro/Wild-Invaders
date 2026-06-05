@@ -24,7 +24,7 @@ public class PlayerShootingSystem implements GameSystem {
         if (db.shoot && (!hasDynamite || db.debugInfiniteShoot)) {
             db.player.isAttacking = true;
             db.player.attackTimer = 0f;
-
+            db.sound.playShootPlayer();
             db.projectiles.add(new Projectile(db.player.getX(), db.player.getY(), Projectile.ProjectileType.DYNAMITE, db.assets.dynamiteTexture));
         }
     }

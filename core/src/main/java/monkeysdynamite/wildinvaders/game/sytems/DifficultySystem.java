@@ -38,7 +38,7 @@ public class DifficultySystem implements GameSystem {
 
     float waveFactor = (1f - aliveRatio);
 
-    db.difficultyMultiplier = 1f + (waveFactor * 0.5f);
+    db.difficultyMultiplier = 1f + (waveFactor * 0.5f) + (timeFactor * 0.5f);
 }
 
     private void applyDifficulty(GameDatabase db) {

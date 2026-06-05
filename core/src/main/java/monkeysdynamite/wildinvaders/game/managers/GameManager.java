@@ -16,10 +16,12 @@ public class GameManager {
     private List<GameSystem> systems;
     private AssetManager assets;
     private ScoreSystem scoreSystem;
+    private LifeSystem lifeSystem;
 
     public GameManager(AssetManager assets) {
         this.assets = assets;
         this.scoreSystem = new ScoreSystem();
+        this.lifeSystem = new LifeSystem();
 
         systems = new ArrayList<>();
 
@@ -57,6 +59,7 @@ public class GameManager {
 
         if (db.requestNextWave) {
             initializeEnemies(db);
+            initializeBarriers(db);
 
             db.requestNextWave = false;
             db.waveTransition = false;
@@ -122,6 +125,11 @@ public class GameManager {
             db.barriers.add(b);
         }
     }
+
+    public LifeSystem getLifeSystem() {
+        return lifeSystem;
+    }
+
     public void dispose(GameDatabase db) {
         assets.dispose();
     }

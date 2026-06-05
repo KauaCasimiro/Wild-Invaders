@@ -59,8 +59,13 @@ public class EnemyShootingSystem implements GameSystem{
         shooter.rotation = 0;
 
         Projectile.ProjectileType type = shooter.getProjectileType();
+        Enemy.EnemyType enemyType = shooter.getType();
 
         if (type == null) {
+            return;
+        }
+
+        if (enemyType == Enemy.EnemyType.TRACTOR || enemyType == null) {
             return;
         }
 
@@ -78,6 +83,19 @@ public class EnemyShootingSystem implements GameSystem{
 
             default:
                 texture = db.assets.bulletTexture;
+                break;
+        }
+
+        switch (enemyType) {
+            case FARMER:
+                db.sound.playShootFarmer();
+                break;
+
+            case MINER:
+                db.sound.playShootMiner();
+                break;
+        
+            default:
                 break;
         }
 

@@ -12,6 +12,8 @@ public class ScoreSystem implements GameSystem {
       updateScoreRanges(db);
 
       updateFormationCache(db);
+
+      updateExtraLives(db);
     }
 
     public void onEnemyKilled(Enemy enemy, GameDatabase db) {
@@ -34,6 +36,7 @@ public class ScoreSystem implements GameSystem {
             bonusText += "x2";
         }
 
+        db.sound.playScoreUp();
         db.score += score;
         db.runStats.finalScore = db.score;
         db.lastScoreGain = score;
@@ -151,5 +154,15 @@ public class ScoreSystem implements GameSystem {
             db.alivesEnemiesByColumn.put(column, columnCount + 1);
         }
 
-}
+    }
+
+    private void updateExtraLives(GameDatabase db) {
+        if (db.score >= db.nextLifeScore) {
+            db.life.healPlayer(db, 1);
+            db.sound.playBonusScore();
+            db.scoreBonusFlash = true;
+            db.scoreBonusFlashTimer = 0f;
+            db.nextLifeScore += 2000;
+        }
+    }
 }
