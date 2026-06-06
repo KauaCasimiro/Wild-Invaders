@@ -40,9 +40,9 @@ public class RenderTool {
         TextureRegion playerFrame;
 
         if (db.player.isAttacking) {
-            playerFrame = db.assets.playerAttackAnimation.getKeyFrame(db.player.attackTimer, false);
+            playerFrame = db.assets.playerAttackAnimation.getAnimation().getKeyFrame(db.player.attackTimer, false);
         } else {
-            playerFrame = db.assets.playerIdleAnimation.getKeyFrame(db.player.animationTimer, true);
+            playerFrame = db.assets.playerIdleAnimation.getAnimation().getKeyFrame(db.player.animationTimer, true);
         }
 
         batch.draw(playerFrame, db.player.getX(), db.player.getY(), db.player.getBounds().width, db.player.getBounds().height);
@@ -60,15 +60,15 @@ public class RenderTool {
 
             switch (enemy.getType()) {
                 case TRACTOR:
-                    frame = db.assets.tractorAnimation.getKeyFrame(enemy.animationTimer, true);
+                    frame = db.assets.tractorAnimation.getAnimation().getKeyFrame(enemy.animationTimer, true);
                     break;
 
                 case FARMER:
-                    frame = db.assets.farmerAnimation.getKeyFrame(enemy.animationTimer, true);
+                    frame = db.assets.farmerAnimation.getAnimation().getKeyFrame(enemy.animationTimer, true);
                     break;
 
                 case MINER:
-                    frame = db.assets.minerAnimation.getKeyFrame(enemy.animationTimer, true);
+                    frame = db.assets.minerAnimation.getAnimation().getKeyFrame(enemy.animationTimer, true);
                     break;
             }
 
@@ -88,7 +88,23 @@ public class RenderTool {
                 continue;
             }
 
-            batch.draw(projectile.getTexture(), projectile.x, projectile.y, projectile.getBounds().width, projectile.getBounds().height);
+            TextureRegion projectileFrame = null;
+
+                switch (projectile.getType()) {
+                    case DYNAMITE:
+                        projectileFrame = db.assets.dynamiteAnimation.getAnimation().getKeyFrame(projectile.animationTimer, true);
+                        break;
+    
+                    case BULLET:
+                        projectileFrame = db.assets.bulletAnimation.getAnimation().getKeyFrame(projectile.animationTimer, true);
+                        break;
+    
+                    case PICKAXE:
+                        projectileFrame = db.assets.pickaxeAnimation.getAnimation().getKeyFrame(projectile.animationTimer, true);
+                        break;
+                }
+
+            batch.draw(projectileFrame, projectile.x, projectile.y, projectile.getWidth(), projectile.getHeight());
         }
     }
 
@@ -102,7 +118,7 @@ public class RenderTool {
             TextureRegion barrierFrame;
 
             if(barrier.isHit) {
-                barrierFrame = db.assets.barrierHitAnimation.getKeyFrame(barrier.hitTimer, false);
+                barrierFrame = db.assets.barrierHitAnimation.getAnimation().getKeyFrame(barrier.hitTimer, false);
             } else if (barrier.state == Barrier.BarrierState.DAMAGED) {
                 barrierFrame = new TextureRegion(db.assets.barrierDamaged);
             } else {

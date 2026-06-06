@@ -2,7 +2,6 @@ package monkeysdynamite.wildinvaders.game.sytems;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.Texture;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
 import monkeysdynamite.wildinvaders.entities.Enemy;
 import monkeysdynamite.wildinvaders.entities.Projectile;
@@ -69,23 +68,6 @@ public class EnemyShootingSystem implements GameSystem{
             return;
         }
 
-        Texture texture;
-
-        switch (type) {
-
-            case BULLET:
-                texture = db.assets.bulletTexture;
-                break;
-
-            case PICKAXE:
-                texture = db.assets.pickaxeTexture;
-                break;
-
-            default:
-                texture = db.assets.bulletTexture;
-                break;
-        }
-
         switch (enemyType) {
             case FARMER:
                 db.sound.playShootFarmer();
@@ -99,6 +81,6 @@ public class EnemyShootingSystem implements GameSystem{
                 break;
         }
 
-        db.projectiles.add(new Projectile(shooter.x, shooter.y, type, texture));
+        db.projectiles.add(new Projectile(shooter.x, shooter.y, type));
     }
 }

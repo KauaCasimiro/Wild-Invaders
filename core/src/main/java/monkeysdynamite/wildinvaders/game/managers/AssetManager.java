@@ -8,32 +8,34 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import monkeysdynamite.wildinvaders.game.tools.AnimationLoader;
+import monkeysdynamite.wildinvaders.game.tools.AnimationData;
 
 public class AssetManager {
     //-----PLAYER-----
-    public Animation<TextureRegion> playerIdleAnimation;
-    public Animation<TextureRegion> playerAttackAnimation;
-
-    private Texture[] playerAttackFrames;
+    public AnimationData playerIdleAnimation;
+    public AnimationData playerAttackAnimation;
 
     //-----ENEMIES-----
     public Texture tractorTexture;
-    public Animation<TextureRegion> tractorAnimation;
+    public AnimationData tractorAnimation;
 
     public Texture farmerTexture;
-    public Animation<TextureRegion> farmerAnimation;
+    public AnimationData farmerAnimation;
+
     public Texture minerTexture;
-    public Animation<TextureRegion> minerAnimation;
+    public AnimationData minerAnimation;
 
     //-----PROJECTILES-----
-    public Texture dynamiteTexture;
-    public Texture bulletTexture;
-    public Texture pickaxeTexture;
+    public AnimationData dynamiteAnimation;
+
+    public AnimationData bulletAnimation;
+
+    public AnimationData pickaxeAnimation;
 
     // BARRIERS
     public Texture barrierIdle;
     public Texture barrierDamaged;
-    public Animation<TextureRegion> barrierHitAnimation;
+    public AnimationData barrierHitAnimation;
 
     // -----BACKGROUNDS-----
     public Texture bgTexture;
@@ -55,8 +57,7 @@ public class AssetManager {
         titleFont = createFont(48);
 
         playerIdleAnimation = AnimationLoader.load("player/george_idle_", 4, 0.15f);
-        playerAttackFrames = loadAnimationFrames("player/attack/george_attack_", 3);
-        playerAttackAnimation = new Animation<>(0.08f, toRegions(playerAttackFrames));
+        playerAttackAnimation = AnimationLoader.load("player/attack/george_attack_", 3, 0.08f);
 
         tractorTexture = new Texture(Gdx.files.internal("enemies/trator.png"));
         tractorAnimation = AnimationLoader.load("enemies/tractor/tractor_", 5, 0.15f);
@@ -65,35 +66,21 @@ public class AssetManager {
         minerTexture = new Texture(Gdx.files.internal("enemies/garimpeiro.png"));
         minerAnimation = AnimationLoader.load("enemies/miner/miner_idle_", 6, 0.15f);
 
-        dynamiteTexture = new Texture(Gdx.files.internal("projectiles/dynamite.png"));
-        bulletTexture = new Texture(Gdx.files.internal("projectiles/bullet.png"));
-        pickaxeTexture = new Texture(Gdx.files.internal("projectiles/pickaxe.png"));
+        //dynamiteTexture = new Texture(Gdx.files.internal("projectiles/dynamite.png"));
+        dynamiteAnimation = AnimationLoader.load("projectiles/bananamite/bananamite_", 4, 0.15f);
+
+        //bulletTexture = new Texture(Gdx.files.internal("projectiles/bullet.png"));
+        bulletAnimation = AnimationLoader.load("projectiles/bullet/bullet_", 4, 0.15f);
+
+        //pickaxeTexture = new Texture(Gdx.files.internal("projectiles/pickaxe.png"));
+        pickaxeAnimation = AnimationLoader.load("projectiles/pickaxe/pickaxe_", 4, 0.15f);
 
         barrierIdle = new Texture(Gdx.files.internal("barrier/stem_stopped.png"));
         barrierDamaged = new Texture(Gdx.files.internal("barrier/stem_damaged.png"));
 
-        Texture[] hitFrames = loadAnimationFrames("barrier/hit/stem_hit_", 5);
-        barrierHitAnimation = new Animation<>(0.08f, toRegions(hitFrames));
+        barrierHitAnimation = AnimationLoader.load("barrier/hit/stem_hit_", 5, 0.08f);
 
         bgTexture = new Texture(Gdx.files.internal("backgrounds/forest_bg.png"));
-    }
-
-    private Texture[] loadAnimationFrames(String pathPreFix, int totalFrames) {
-        Texture[] frames = new Texture[totalFrames];
-
-        for (int i = 0; i < totalFrames; i++) {
-            frames[i] = new Texture(Gdx.files.internal(pathPreFix + (i + 1) + ".png"));
-        }
-        return frames;
-    }
-
-    private TextureRegion[] toRegions(Texture[] textures) {
-        TextureRegion[] regions = new TextureRegion[textures.length];
-
-        for (int i = 0; i < textures.length; i++) {
-            regions[i] = new TextureRegion(textures[i]);
-        }
-        return regions;
     }
 
     private BitmapFont createFont(int size) {
@@ -116,7 +103,16 @@ public class AssetManager {
     }
 
     public void dispose() {
-        //playerIdleAnimation.dispose();
+        playerIdleAnimation.dispose();
+        playerAttackAnimation.dispose();
+
+        tractorAnimation.dispose();
+        farmerAnimation.dispose();
+        minerAnimation.dispose();
+
+        dynamiteAnimation.dispose();
+        bulletAnimation.dispose();
+        pickaxeAnimation.dispose();
 
         smallFont.dispose();
         mediumFont.dispose();
@@ -128,9 +124,10 @@ public class AssetManager {
         farmerTexture.dispose();
         minerTexture.dispose();
 
-        dynamiteTexture.dispose();
-        bulletTexture.dispose();
-        pickaxeTexture.dispose();
+        barrierIdle.dispose();
+        barrierDamaged.dispose();
+        barrierHitAnimation.dispose();
+        
         bgTexture.dispose();
     }
 }

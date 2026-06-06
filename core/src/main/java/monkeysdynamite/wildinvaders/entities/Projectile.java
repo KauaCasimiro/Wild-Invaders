@@ -1,7 +1,6 @@
 package monkeysdynamite.wildinvaders.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Projectile {
@@ -18,8 +17,9 @@ public class Projectile {
     public float x;
     public float y;
 
-    private Texture texture;
     private ProjectileType type;
+
+    public float animationTimer = 0f;
 
     public enum ProjectileType {
         DYNAMITE,
@@ -29,12 +29,11 @@ public class Projectile {
 
     public int collumnIndex;
 
-    public Projectile(float x, float y, ProjectileType type, Texture texture) {
+    public Projectile(float x, float y, ProjectileType type) {
         this.x = x;
         this.y = y;
 
         this.type = type;
-        this.texture = texture;
 
         this.isActive = true;
 
@@ -42,6 +41,8 @@ public class Projectile {
 
         switch (type) {
             case DYNAMITE:
+                this.x = x + 40f; // 👈 ajuste aqui (direita)
+                this.y = y;
                 vspd = 300f;
             break;
             case BULLET:
@@ -61,8 +62,12 @@ public class Projectile {
         return type;
     }
 
-    public Texture getTexture() {
-        return texture;
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public void update(float delta) {
@@ -72,8 +77,10 @@ public class Projectile {
 
         if (type != ProjectileType.DYNAMITE) {
             y -= vspd * delta;
+            animationTimer += delta;
         } else  {
             y += vspd * delta;
+            animationTimer += delta;
         }
 
         if (y > Gdx.graphics.getHeight() || y + height < 0) {

@@ -23,7 +23,11 @@ public class Barrier {
     }
 
     public BarrierState state =  BarrierState.IDLE;
+    
     private Rectangle bounds;
+
+    private float hitBoxOffset = 10f;
+
     public Barrier(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
@@ -35,11 +39,11 @@ public class Barrier {
 
         hit = 15;
 
-        bounds = new Rectangle(x, y, width, height);
+        bounds = new Rectangle(x + hitBoxOffset, y + hitBoxOffset, width - hitBoxOffset * 2, height - hitBoxOffset * 2);
     }
 
     public void update(float delta) {
-        bounds.setPosition(x, y);
+        bounds.setPosition(x + hitBoxOffset, y + hitBoxOffset);
 
         if (isHit) {
             hitTimer+= delta;

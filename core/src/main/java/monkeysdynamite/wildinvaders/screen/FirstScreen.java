@@ -126,7 +126,7 @@ public class FirstScreen implements Screen {
 
         hudCamera.apply();
         batch.setProjectionMatrix(hudCamera.getCamera().combined);
-        debugTool.renderHudAreas(shapeRenderer, hudCamera.getCamera());
+        //debugTool.renderHudAreas(shapeRenderer, hudCamera.getCamera());
         //debugTool.renderMobileHudDebug(shapeRenderer, hudCamera, mobile);
 
 
@@ -142,7 +142,7 @@ public class FirstScreen implements Screen {
         float startX = padding + 80f;
         float startY = padding;
 
-        TextureRegion playerFrame = db.assets.playerIdleAnimation.getKeyFrame(db.player.animationTimer, true);
+        TextureRegion playerFrame = db.assets.playerIdleAnimation.getAnimation().getKeyFrame(db.player.animationTimer, true);
 
         batch.draw(playerFrame, startX + 500f, startY, lifeSize, lifeSize);
         font.draw(batch, "x " + db.playerLives, startX + 500f + lifeSize + 5f, startY + lifeSize - 5f);

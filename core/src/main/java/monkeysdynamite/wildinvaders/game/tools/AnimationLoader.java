@@ -7,17 +7,23 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AnimationLoader {
 
-    public static Animation<TextureRegion> load (String baseName, int frameCount, float frameDuration) {
+    public static AnimationData load(String baseName, int frameCount, float frameDuration) {
         TextureRegion[] frames = new TextureRegion[frameCount];
+        Texture[] textures = new Texture[frameCount];
 
         for (int i = 0; i < frameCount; i++) {
+
             String fileName = baseName + (i + 1) + ".png";
 
-            Texture texture = new Texture(Gdx.files.internal(fileName));
+            Texture texture =
+                    new Texture(Gdx.files.internal(fileName));
 
+            textures[i] = texture;
             frames[i] = new TextureRegion(texture);
         }
 
-        return new Animation<>(frameDuration, frames);
+        Animation<TextureRegion> animation = new Animation<>(frameDuration, frames);
+
+        return new AnimationData(animation, textures);
     }
 }
