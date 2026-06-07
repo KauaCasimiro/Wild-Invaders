@@ -53,6 +53,19 @@ public class GameManager {
     }
 
     public void update(GameDatabase db, float delta) {
+        if(db.pause) {
+            db.isPaused = !db.isPaused;
+            if (db.isPaused) {
+                db.sound.pauseGameMusic();
+            } else {
+                db.sound.resumeGameMusic();
+            }
+        }
+
+        if (db.isPaused) {
+            return;
+        }
+        
         for (GameSystem system : systems) {
             system.update(db, delta);
         }

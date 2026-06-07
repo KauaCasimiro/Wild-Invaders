@@ -72,27 +72,31 @@ public class FirstScreen implements Screen {
         boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.D)  || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         boolean keyShoot = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
+        boolean keyPause = Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
 
         //----- INPUT MOBILE -----
         boolean buttonLeft = false;
         boolean buttonRight = false;
         boolean buttonShoot = false;
+        boolean buttonPause = false;
 
         if (mobile != null) {
             mobile.update();
             buttonLeft = mobile.isLeftPressed;
             buttonRight = mobile.isRightPressed;
             buttonShoot = mobile.isShootPressed;
+            buttonPause = mobile.isPausePressed;
         }
 
         //-----UNIFY INPUT-----
         boolean left = keyLeft || buttonLeft;
         boolean right = keyRight || buttonRight;
         boolean shoot = keyShoot || buttonShoot;
+        boolean pause = keyPause || buttonPause;
         //-----UNIFY INPUT-----
 
         //-----UPDATE GAME-----
-        gameController.update(left, right, shoot);
+        gameController.update(left, right, shoot, pause);
         debugTool.updateDebugInput(db);
         //-----UPDATE GAME-----
 

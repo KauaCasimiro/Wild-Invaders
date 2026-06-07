@@ -1,13 +1,10 @@
 package monkeysdynamite.wildinvaders.game.sytems;
 
 import monkeysdynamite.wildinvaders.entities.Enemy;
-import monkeysdynamite.wildinvaders.entities.Projectile;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
 
 import java.util.List;
 public class EnemyColumnSystem implements GameSystem {
-
-    private static final float COLUMN_TOLERANCE = 28f;
 
     @Override
     public void update(GameDatabase db, float delta) {

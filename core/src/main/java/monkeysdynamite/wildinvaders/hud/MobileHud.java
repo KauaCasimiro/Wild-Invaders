@@ -13,6 +13,8 @@ public class MobileHud {
     public boolean isLeftPressed;
     public boolean isRightPressed;
     public boolean isShootPressed;
+    public boolean isPausePressed;
+    private boolean pauseLocked;
 
     private ShapeRenderer shapeRenderer;
 
@@ -22,6 +24,7 @@ public class MobileHud {
     private Circle leftButton;
     private Circle rightButton;
     private Circle shootButton;
+    private Circle pauseButton;
 
     public MobileHud(HudCamera hudCamera) {
         this.hudCamera = hudCamera;
@@ -49,6 +52,9 @@ public class MobileHud {
 
         // SHOOT BUTTON
         shootButton = new Circle(w - 90f, centerY, radius);
+
+        // PAUSE BUTTON
+        pauseButton = new Circle(w - 250f, centerY, radius);
     }
 
     public void update() {
@@ -56,11 +62,13 @@ public class MobileHud {
         isLeftPressed = false;
         isRightPressed = false;
         isShootPressed = false;
+        isPausePressed = false;
+        boolean pauseTouched = false;
 
 
         for (int i = 0; i < 10; i++) {
             if (!Gdx.input.isTouched(i)) {
-                return;
+                continue;
             }
 
             // TOUCH IN SCREEN SPACE
@@ -80,6 +88,19 @@ public class MobileHud {
             if (shootButton.contains(touch.x, touch.y)) { // SHOOT BUTTON
                 isShootPressed = true;
             }
+
+            if (pauseButton.contains(touch.x, touch.y)) { // PAUSE BUTTON
+                pauseTouched = true;
+            }
+        }
+
+        if (pauseTouched && !pauseLocked) {
+            isPausePressed = true;
+            pauseLocked = true;
+        }
+
+        if (!pauseTouched) {
+            pauseLocked = false;
         }
     }
 
@@ -99,6 +120,10 @@ public class MobileHud {
         //SHOOT
         shapeRenderer.setColor(isShootPressed ? Color.ORANGE : Color.RED);
         shapeRenderer.circle(shootButton.x, shootButton.y, shootButton.radius);
+
+        //PAUSE
+        shapeRenderer.setColor(isPausePressed ? Color.YELLOW : Color.GOLD);
+        shapeRenderer.circle(pauseButton.x, pauseButton.y, pauseButton.radius);
 
         shapeRenderer.end();
     }

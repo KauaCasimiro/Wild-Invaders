@@ -91,6 +91,9 @@ public class GameDatabase {
     public boolean playerDamageFlash = false;
     public ArrayList<EffectParticle> particles;
 
+    public boolean isPaused = false;
+    public boolean pause = false;
+
     public GameDatabase() {
         enemies = new ArrayList<>();
         projectiles = new ArrayList<>();

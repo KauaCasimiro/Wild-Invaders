@@ -58,6 +58,18 @@ public class SoundManager {
         }
     }
 
+    public void pauseGameMusic() {
+        if (gameMusic.isPlaying()) {
+            gameMusic.pause();
+        }
+    }
+
+    public void resumeGameMusic() {
+        if (!gameMusic.isPlaying()) {
+            gameMusic.play();
+        }
+    }
+
     public void playHitPlayer() {
         hitPlayer.play();
     }

@@ -56,12 +56,13 @@ public class GameController {
 
     }
 
-    public void update(boolean left, boolean right, boolean shoot) {
-        controllers.update(left, right, shoot);
+    public void update(boolean left, boolean right, boolean shoot, boolean pause) {
+        controllers.update(left, right, shoot, pause);
 
         db.left = controllers.left;
         db.right = controllers.right;
         db.shoot = controllers.shoot;
+        db.pause = controllers.pause;
 
         float delta = Gdx.graphics.getDeltaTime();
 

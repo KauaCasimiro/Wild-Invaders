@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import monkeysdynamite.wildinvaders.config.GameConfig;
 import monkeysdynamite.wildinvaders.entities.Barrier;
@@ -134,6 +133,12 @@ public class DebugTool {
 
         //FPS
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), x, topY);*/
+
+        if (db.isPaused) {
+            font.getData().setScale(2f);
+            font.draw(batch, "PAUSED", GameConfig.WorldConfig.WORLD_WIDTH / 2f - 100, GameConfig.WorldConfig.WORLD_HEIGHT / 2f);
+            font.getData().setScale(1f);
+        }
     }
 
     public void renderWaveMessage(SpriteBatch batch, BitmapFont font, GameDatabase db) {
