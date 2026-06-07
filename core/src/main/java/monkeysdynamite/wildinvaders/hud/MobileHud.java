@@ -2,6 +2,7 @@ package monkeysdynamite.wildinvaders.hud;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
@@ -54,7 +55,7 @@ public class MobileHud {
         shootButton = new Circle(w - 90f, centerY, radius);
 
         // PAUSE BUTTON
-        pauseButton = new Circle(w - 250f, centerY, radius);
+        pauseButton = new Circle(50f, centerY + 540f, radius-30f);
     }
 
     public void update() {
@@ -106,26 +107,38 @@ public class MobileHud {
 
     public void render() {
 
+       Gdx.gl.glEnable(GL20.GL_BLEND);
+       Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
        shapeRenderer.setProjectionMatrix(hudCamera.getCamera().combined);
        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
        //LEFT
-        shapeRenderer.setColor(isLeftPressed ? Color.WHITE : Color.DARK_GRAY);
+        shapeRenderer.setColor(isLeftPressed ? new Color(1, 1, 1, 0.8f) : new Color(0.25f, 0.25f, 0.25f, 0.8f));
         shapeRenderer.circle(leftButton.x, leftButton.y, leftButton.radius);
 
         //RIGHT
-        shapeRenderer.setColor(isRightPressed ? Color.WHITE : Color.DARK_GRAY);
+        shapeRenderer.setColor(isRightPressed ? new Color(1, 1, 1, 0.8f) : new Color(0.25f, 0.25f, 0.25f, 0.8f));
         shapeRenderer.circle(rightButton.x, rightButton.y, rightButton.radius);
 
         //SHOOT
-        shapeRenderer.setColor(isShootPressed ? Color.ORANGE : Color.RED);
+        shapeRenderer.setColor(isShootPressed ? new Color(1, 0.647f, 0, 0.8f) : new Color(0.8f, 0, 0, 0.8f));
         shapeRenderer.circle(shootButton.x, shootButton.y, shootButton.radius);
 
         //PAUSE
-        shapeRenderer.setColor(isPausePressed ? Color.YELLOW : Color.GOLD);
+        shapeRenderer.setColor(isPausePressed ? new Color(1, 1, 0, 0.9f) : new Color(1, 0.843f, 0, 0.9f));
         shapeRenderer.circle(pauseButton.x, pauseButton.y, pauseButton.radius);
 
+        shapeRenderer.setColor(Color.BLACK);
+
+        float barWidth = 8f;
+        float barHeight = 30f;
+
+        shapeRenderer.rect(pauseButton.x - 12, pauseButton.y - 15, barWidth, barHeight);
+        shapeRenderer.rect(pauseButton.x + 4, pauseButton.y - 15, barWidth, barHeight);
+
         shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     public Circle getLeftButton() {
