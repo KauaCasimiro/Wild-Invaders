@@ -49,6 +49,8 @@ public class AssetManager {
     // ----- BUTTONS -----
     public AnimationData playButtonAnimation;
     public AnimationData exitButtonAnimation;
+
+    public Texture mdLogo;
     
     public AssetManager() {
         load();
@@ -85,6 +87,8 @@ public class AssetManager {
 
         playButtonAnimation = AnimationLoader.load("buttons/play/button_play_", 3, 0.15f);
         exitButtonAnimation = AnimationLoader.load("buttons/exit/button_exit_", 3, 0.15f);
+
+        mdLogo = new Texture(Gdx.files.internal("logo/md.png"));
     }
 
     private BitmapFont createFont(int size) {
@@ -133,5 +137,7 @@ public class AssetManager {
         barrierHitAnimation.dispose();
         
         bgTexture.dispose();
+
+        mdLogo.dispose();
     }
 }

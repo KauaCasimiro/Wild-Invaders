@@ -30,6 +30,11 @@ public class MainMenuScreen implements Screen {
     private ImageButton playButton;
     private ImageButton exitButton;
 
+    private final float logoSize = 120f;
+
+    private float logoX;
+    private float logoY;
+
     private float playTimer;
     private float exitTimer;
 
@@ -99,6 +104,9 @@ public class MainMenuScreen implements Screen {
         table.row();
         table.add(exitButton).width(buttonWidth).height(buttonHeight);
 
+        logoX = Gdx.graphics.getWidth() - logoSize - 20f;
+        logoY = 20f;
+
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -109,6 +117,20 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (Gdx.input.justTouched()) {
+
+            float touchX = Gdx.input.getX();
+            float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
+
+            if (touchX >= logoX &&
+                touchX <= logoX + logoSize &&
+                touchY >= logoY &&
+                touchY <= logoY + logoSize) {
+
+                Gdx.net.openURI("https://monkeys-dynamite.itch.io/");
+            }
+        }
+
         if (playButton.isPressed()) {
 
             playTimer += delta;
@@ -143,6 +165,17 @@ public class MainMenuScreen implements Screen {
 
         batch.begin();
         batch.draw(game.assets.bgMenus, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        game.assets.mediumFont.getData().setScale(0.8f);
+
+        game.assets.mediumFont.draw(batch,"Visit our site",logoX - 5f,logoY + logoSize + 25f);
+
+        batch.setColor(1f, 1f, 1f, 1f);
+
+        batch.draw(game.assets.mdLogo,logoX,logoY,logoSize,logoSize);
+
+        batch.setColor(1f, 1f, 1f, 1f);
+        
         batch.end();
 
         stage.act(delta);

@@ -161,6 +161,7 @@ public class FirstScreen implements Screen {
         font.draw(batch, "x " + db.playerLives, startX + 500f + lifeSize + 5f, startY + lifeSize - 5f);
 
         batch.end();
+
         //-----MOBILE HUD-----
         if (mobile != null) {
             mobile.render();
