@@ -3,9 +3,11 @@ package monkeysdynamite.wildinvaders.hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.Texture;
 
 import monkeysdynamite.wildinvaders.config.GameConfig;
 
@@ -18,6 +20,16 @@ public class MobileHud {
     private boolean pauseLocked;
 
     private ShapeRenderer shapeRenderer;
+    private SpriteBatch batch;
+
+    private Texture leftButton1;
+    private Texture leftButton2;
+
+    private Texture rightButton1;
+    private Texture rightButton2;
+
+    private Texture shootButton1;
+    private Texture shootButton2;
 
     private HudCamera hudCamera;
 
@@ -31,6 +43,17 @@ public class MobileHud {
         this.hudCamera = hudCamera;
 
         shapeRenderer = new ShapeRenderer();
+
+        batch = new SpriteBatch();
+
+        leftButton1 = new Texture(Gdx.files.internal("buttons/left/left_button_1.png"));
+        leftButton2 = new Texture(Gdx.files.internal("buttons/left/left_button_2.png"));
+
+        rightButton1 = new Texture(Gdx.files.internal("buttons/right/right_button_1.png"));
+        rightButton2 = new Texture(Gdx.files.internal("buttons/right/right_button_2.png"));
+
+        shootButton1 = new Texture(Gdx.files.internal("buttons/atk/atk_button_1.png"));
+        shootButton2 = new Texture(Gdx.files.internal("buttons/atk/atk_button_2.png"));
 
         resize();
     }
@@ -106,13 +129,13 @@ public class MobileHud {
     }
 
     public void render() {
-
        Gdx.gl.glEnable(GL20.GL_BLEND);
        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
        shapeRenderer.setProjectionMatrix(hudCamera.getCamera().combined);
        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
+        /*
        //LEFT
         shapeRenderer.setColor(isLeftPressed ? new Color(1, 1, 1, 0.8f) : new Color(0.25f, 0.25f, 0.25f, 0.8f));
         shapeRenderer.circle(leftButton.x, leftButton.y, leftButton.radius);
@@ -124,6 +147,7 @@ public class MobileHud {
         //SHOOT
         shapeRenderer.setColor(isShootPressed ? new Color(1, 0.647f, 0, 0.8f) : new Color(0.8f, 0, 0, 0.8f));
         shapeRenderer.circle(shootButton.x, shootButton.y, shootButton.radius);
+        */
 
         //PAUSE
         shapeRenderer.setColor(isPausePressed ? new Color(1, 1, 0, 0.9f) : new Color(1, 0.843f, 0, 0.9f));
@@ -139,6 +163,20 @@ public class MobileHud {
 
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
+
+        batch.setProjectionMatrix(hudCamera.getCamera().combined);
+
+        batch.begin();
+
+        Texture leftTexture = isLeftPressed ? leftButton2 : leftButton1;
+        Texture rightTexture = isRightPressed ? rightButton2 : rightButton1;
+        Texture shootTexture =  isShootPressed ? shootButton2 : shootButton1;
+
+        batch.draw(leftTexture, leftButton.x - leftButton.radius, leftButton.y - leftButton.radius, leftButton.radius * 2.5f, leftButton.radius * 2.5f);
+        batch.draw(rightTexture, rightButton.x - rightButton.radius, rightButton.y - rightButton.radius, rightButton.radius * 2.5f, rightButton.radius * 2.5f);
+        batch.draw(shootTexture, shootButton.x - shootButton.radius, shootButton.y - shootButton.radius, shootButton.radius * 2.5f, shootButton.radius * 2.5f);
+
+        batch.end();
     }
 
     public Circle getLeftButton() {
@@ -155,5 +193,14 @@ public class MobileHud {
 
     public void dispose() {
         shapeRenderer.dispose();
+
+        leftButton1.dispose();
+        leftButton2.dispose();
+
+        rightButton1.dispose();
+        rightButton2.dispose();
+
+        shootButton1.dispose();
+        shootButton2.dispose();
     }
 }

@@ -19,6 +19,7 @@ import monkeysdynamite.wildinvaders.game.GameDatabase;
 import monkeysdynamite.wildinvaders.game.tools.DebugTool;
 import monkeysdynamite.wildinvaders.hud.HudCamera;
 import monkeysdynamite.wildinvaders.hud.MobileHud;
+import monkeysdynamite.wildinvaders.game.managers.SaveManager;
 
 
 
@@ -55,9 +56,10 @@ public class FirstScreen implements Screen {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
 
-        gameController = new GameController();
+        gameController = new GameController(game.highScore);
 
         db = gameController.getDb();
+        db.highScore = game.highScore;
 
         font = db.assets.mediumFont;
 
@@ -101,6 +103,13 @@ public class FirstScreen implements Screen {
         //-----UPDATE GAME-----
 
         if (db.isGameOver) {
+
+            SaveManager.saveHighScore(db.highScore);
+
+            game.highScore = db.highScore;
+
+            db.runStats.highScore = db.highScore;
+
             game.setScreen(new GameOverScreen(game, db.runStats));
 
             dispose();
@@ -126,7 +135,7 @@ public class FirstScreen implements Screen {
         shapeRenderer.setProjectionMatrix(gameCamera.getCamera().combined);
         gameController.renderEffect(shapeRenderer);
 
-        debugTool.renderColliders(shapeRenderer, gameCamera.getCamera(), db);
+        //debugTool.renderColliders(shapeRenderer, gameCamera.getCamera(), db);
 
         hudCamera.apply();
         batch.setProjectionMatrix(hudCamera.getCamera().combined);

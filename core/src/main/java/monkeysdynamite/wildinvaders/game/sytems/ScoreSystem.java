@@ -42,7 +42,7 @@ public class ScoreSystem implements GameSystem {
         db.lastScoreGain = score;
 
         if (db.score > db.highScore) {
-            db.highScore += score;
+            db.highScore = db.score;
             db.runStats.highScore = db.highScore;
         }
 

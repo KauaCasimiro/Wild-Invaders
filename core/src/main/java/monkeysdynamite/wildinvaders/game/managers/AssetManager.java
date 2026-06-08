@@ -37,13 +37,19 @@ public class AssetManager {
 
     // -----BACKGROUNDS-----
     public Texture bgTexture;
+    public Texture bgMenus;
 
     // ----- FONTS -----
     public BitmapFont smallFont;
     public BitmapFont mediumFont;
     public BitmapFont largeFont;
     public BitmapFont titleFont;
+    public BitmapFont mainTitleFont;
 
+    // ----- BUTTONS -----
+    public AnimationData playButtonAnimation;
+    public AnimationData exitButtonAnimation;
+    
     public AssetManager() {
         load();
     }
@@ -53,6 +59,7 @@ public class AssetManager {
         mediumFont = createFont(24);
         largeFont = createFont(32);
         titleFont = createFont(48);
+        mainTitleFont = createFont(88);
 
         playerIdleAnimation = AnimationLoader.load("player/george_idle_", 4, 0.15f);
         playerAttackAnimation = AnimationLoader.load("player/attack/george_attack_", 3, 0.08f);
@@ -64,13 +71,8 @@ public class AssetManager {
         minerTexture = new Texture(Gdx.files.internal("enemies/garimpeiro.png"));
         minerAnimation = AnimationLoader.load("enemies/miner/miner_idle_", 6, 0.15f);
 
-        //dynamiteTexture = new Texture(Gdx.files.internal("projectiles/dynamite.png"));
         dynamiteAnimation = AnimationLoader.load("projectiles/bananamite/bananamite_", 4, 0.15f);
-
-        //bulletTexture = new Texture(Gdx.files.internal("projectiles/bullet.png"));
         bulletAnimation = AnimationLoader.load("projectiles/bullet/bullet_", 4, 0.15f);
-
-        //pickaxeTexture = new Texture(Gdx.files.internal("projectiles/pickaxe.png"));
         pickaxeAnimation = AnimationLoader.load("projectiles/pickaxe/pickaxe_", 4, 0.15f);
 
         barrierIdle = new Texture(Gdx.files.internal("barrier/stem_stopped.png"));
@@ -79,6 +81,10 @@ public class AssetManager {
         barrierHitAnimation = AnimationLoader.load("barrier/hit/stem_hit_", 5, 0.08f);
 
         bgTexture = new Texture(Gdx.files.internal("backgrounds/forest_bg.png"));
+        bgMenus = new Texture(Gdx.files.internal("backgrounds/bg_menu.png"));
+
+        playButtonAnimation = AnimationLoader.load("buttons/play/button_play_", 3, 0.15f);
+        exitButtonAnimation = AnimationLoader.load("buttons/exit/button_exit_", 3, 0.15f);
     }
 
     private BitmapFont createFont(int size) {

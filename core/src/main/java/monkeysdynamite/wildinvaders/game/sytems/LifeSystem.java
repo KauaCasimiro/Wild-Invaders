@@ -1,5 +1,6 @@
 package monkeysdynamite.wildinvaders.game.sytems;
 import monkeysdynamite.wildinvaders.game.GameDatabase;
+import monkeysdynamite.wildinvaders.game.managers.SaveManager;
 
 public class LifeSystem {
 

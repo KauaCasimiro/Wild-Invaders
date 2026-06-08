@@ -26,9 +26,11 @@ public class GameController {
     private RenderTool renderTool;
 
 
-    public GameController() {
+    public GameController(int savedHighScore) {
        //DATABASE
         db = new GameDatabase();
+        db.highScore = savedHighScore;
+        db.runStats.highScore = savedHighScore;
 
        //INPUT
         controllers = new Controllers();

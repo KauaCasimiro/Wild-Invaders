@@ -9,8 +9,8 @@ public class Projectile {
 
     private float vspd;
 
-    private int width = 16;
-    private int height = 32;
+    private int width = 48;
+    private int height = 48;
 
     private Rectangle bounds;
 
@@ -41,7 +41,7 @@ public class Projectile {
 
         switch (type) {
             case DYNAMITE:
-                this.x = x + 40f; // 👈 ajuste aqui (direita)
+                this.x = x + 20f;
                 this.y = y;
                 vspd = 300f;
             break;

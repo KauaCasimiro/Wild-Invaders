@@ -3,6 +3,9 @@ package monkeysdynamite.wildinvaders.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -11,27 +14,68 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import monkeysdynamite.wildinvaders.Main;
+import monkeysdynamite.wildinvaders.config.GameConfig;
+
 public class MainMenuScreen implements Screen {
     private Stage stage;
     private Skin skin;
     private Main game;
+    private SpriteBatch batch;
+
+    private ImageButton playButton;
+    private ImageButton exitButton;
+
+    private float playTimer;
+    private float exitTimer;
 
     public MainMenuScreen(Main game) {
         this.game = game;
 
+        batch = new SpriteBatch();
+
         stage = new Stage(new ScreenViewport());
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+
+        // ----- CONFIG MOBILE / DESKTOP -----
+
+        float buttonWidth = 512;
+        float buttonHeight = 256;
+
+        float titlePadTop = 90;
+        float playPadTop = 30;
+
+        if (GameConfig.isMobile) {
+
+            buttonWidth = 700;
+            buttonHeight = 350;
+
+            titlePadTop = 30;
+            playPadTop = 20;
+        }
+
+        
         Table table = new Table();
         table.setFillParent(true);
-        stage.addActor(table);
-        Label title = new Label("Wild Invaders", skin);
-        title.setFontScale(2.5f);
-        table.add(title).padBottom(20);
+        table.center();
 
-        TextButton playButton = new TextButton("Play", skin);
-        playButton.getLabel().setFontScale(2.5f);
+        stage.addActor(table);
+
+        Label.LabelStyle titleStyle = new Label.LabelStyle();
+
+        BitmapFont titleFont = game.assets.mainTitleFont;
+
+        titleStyle.font = titleFont;
+
+        Label title = new Label("Wild Invaders", titleStyle);
+        
+        table.add(title).padTop(titlePadTop);
+
+        TextureRegionDrawable playDrawable = new TextureRegionDrawable(game.assets.playButtonAnimation.getAnimation().getKeyFrame(0));
+        playButton = new ImageButton(playDrawable);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -40,7 +84,20 @@ public class MainMenuScreen implements Screen {
         });
 
         table.row();
-        table.add(playButton).padTop(20);
+        table.add(playButton).width(buttonWidth).height(buttonHeight).padTop(playPadTop);
+
+        TextureRegionDrawable exitDrawable = new TextureRegionDrawable(game.assets.exitButtonAnimation.getAnimation().getKeyFrame(0));
+        exitButton = new ImageButton(exitDrawable);
+        
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+
+        table.row();
+        table.add(exitButton).width(buttonWidth).height(buttonHeight);
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -52,8 +109,42 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (playButton.isPressed()) {
+
+            playTimer += delta;
+
+            TextureRegion frame = game.assets.playButtonAnimation.getAnimation().getKeyFrame(playTimer, false);
+            playButton.getStyle().imageUp = new TextureRegionDrawable(frame);
+
+        } else {
+
+            playTimer = 0;
+
+            playButton.getStyle().imageUp = new TextureRegionDrawable(game.assets.playButtonAnimation.getAnimation().getKeyFrame(0));
+
+        }
+
+        if (exitButton.isPressed()) {
+
+            exitTimer += delta;
+
+            TextureRegion frame = game.assets.exitButtonAnimation.getAnimation().getKeyFrame(exitTimer, false);
+            exitButton.getStyle().imageUp = new TextureRegionDrawable(frame);
+            
+        } else {
+
+            exitTimer = 0;
+
+            exitButton.getStyle().imageUp = new TextureRegionDrawable(game.assets.exitButtonAnimation.getAnimation().getKeyFrame(0));
+        }
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.begin();
+        batch.draw(game.assets.bgMenus, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
+
         stage.act(delta);
         stage.draw();
     }

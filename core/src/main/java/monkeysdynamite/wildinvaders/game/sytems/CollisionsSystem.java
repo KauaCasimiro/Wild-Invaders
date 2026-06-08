@@ -26,6 +26,8 @@ public class CollisionsSystem implements GameSystem {
         handleProjectileCollision(db);
 
         handleEnemyPlayerCollison(db);
+
+        handleEnemyBarrierCollison(db);
     }
 
     //Collison dynamite x enemies
@@ -107,6 +109,39 @@ public class CollisionsSystem implements GameSystem {
                 db.player.isAlive = false;
                 db.isGameOver = true;
                 break;
+            }
+        }
+    }
+
+    private void handleEnemyBarrierCollison(GameDatabase db) {
+        for (Enemy enemy : db.enemies) {
+            if (!enemy.isAlive) {
+                continue;
+            }
+
+            for (Barrier b : db.barriers) {
+                if (!b.isActive) {
+                    continue;
+                }
+
+                if (!enemy.getBounds().overlaps(b.getBounds())) {
+                    continue;
+                }
+
+                b.hit = 0;
+
+                for(int i = 0; i < 10; i++) {
+                        float vx = (float)(Math.random() * 100f - 50f);
+                        float vy = (float)(Math.random() * 100f - 50f);
+
+                        db.particles.add(new EffectParticle(b.x + b.width / 2, b.y + b.height / 2, vx, vy, 0.4f));
+                }
+                
+                db.sound.playBarrierHit();
+
+                if (b.hit <= 0) {
+                    b.isActive = false;
+                }
             }
         }
     }
