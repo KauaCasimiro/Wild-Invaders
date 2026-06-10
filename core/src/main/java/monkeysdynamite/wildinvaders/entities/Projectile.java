@@ -13,6 +13,7 @@ public class Projectile {
     private int height = 48;
 
     private Rectangle bounds;
+    private float hitBoxOffset = 10f;
 
     public float x;
     public float y;
@@ -37,7 +38,7 @@ public class Projectile {
 
         this.isActive = true;
 
-        bounds = new Rectangle(x, y, width, height);
+        bounds = new Rectangle(x + hitBoxOffset, y + hitBoxOffset, width - hitBoxOffset * 2, height - hitBoxOffset * 2);
 
         switch (type) {
             case DYNAMITE:
@@ -87,6 +88,6 @@ public class Projectile {
             isActive = false;
         }
 
-        bounds.setPosition(x, y);
+        bounds.setPosition(x + hitBoxOffset, y + hitBoxOffset);
     }
 }

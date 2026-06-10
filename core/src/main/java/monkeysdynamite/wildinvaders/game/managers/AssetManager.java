@@ -42,6 +42,7 @@ public class AssetManager {
     // ----- FONTS -----
     public BitmapFont smallFont;
     public BitmapFont mediumFont;
+    public BitmapFont middleFont;
     public BitmapFont largeFont;
     public BitmapFont titleFont;
     public BitmapFont mainTitleFont;
@@ -59,6 +60,7 @@ public class AssetManager {
     private void load() {
         smallFont = createFont(16);
         mediumFont = createFont(24);
+        middleFont = createFont(28);
         largeFont = createFont(32);
         titleFont = createFont(48);
         mainTitleFont = createFont(88);
@@ -124,6 +126,7 @@ public class AssetManager {
 
         smallFont.dispose();
         mediumFont.dispose();
+        middleFont.dispose();
         largeFont.dispose();
         titleFont.dispose();
 

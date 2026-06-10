@@ -52,6 +52,7 @@ public class MainMenuScreen implements Screen {
 
         float titlePadTop = 90;
         float playPadTop = 30;
+        float playPadBottom = -60;
 
         if (GameConfig.isMobile) {
 
@@ -60,9 +61,10 @@ public class MainMenuScreen implements Screen {
 
             titlePadTop = 30;
             playPadTop = 20;
+            playPadBottom = -150;
         }
 
-        
+
         Table table = new Table();
         table.setFillParent(true);
         table.center();
@@ -76,7 +78,7 @@ public class MainMenuScreen implements Screen {
         titleStyle.font = titleFont;
 
         Label title = new Label("Wild Invaders", titleStyle);
-        
+
         table.add(title).padTop(titlePadTop);
 
         TextureRegionDrawable playDrawable = new TextureRegionDrawable(game.assets.playButtonAnimation.getAnimation().getKeyFrame(0));
@@ -84,16 +86,17 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.sound.stopMenuMusic();
                 game.setScreen(new FirstScreen(game));
             }
         });
 
         table.row();
-        table.add(playButton).width(buttonWidth).height(buttonHeight).padTop(playPadTop);
+        table.add(playButton).width(buttonWidth).height(buttonHeight).padTop(playPadTop).padBottom(playPadBottom);
 
         TextureRegionDrawable exitDrawable = new TextureRegionDrawable(game.assets.exitButtonAnimation.getAnimation().getKeyFrame(0));
         exitButton = new ImageButton(exitDrawable);
-        
+
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -106,13 +109,13 @@ public class MainMenuScreen implements Screen {
 
         logoX = Gdx.graphics.getWidth() - logoSize - 20f;
         logoY = 20f;
+        game.sound.playMenuMusic();
 
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -152,7 +155,7 @@ public class MainMenuScreen implements Screen {
 
             TextureRegion frame = game.assets.exitButtonAnimation.getAnimation().getKeyFrame(exitTimer, false);
             exitButton.getStyle().imageUp = new TextureRegionDrawable(frame);
-            
+
         } else {
 
             exitTimer = 0;
@@ -175,7 +178,7 @@ public class MainMenuScreen implements Screen {
         batch.draw(game.assets.mdLogo,logoX,logoY,logoSize,logoSize);
 
         batch.setColor(1f, 1f, 1f, 1f);
-        
+
         batch.end();
 
         stage.act(delta);
@@ -199,7 +202,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
-
+        Gdx.input.setInputProcessor(null);
     }
 
     @Override

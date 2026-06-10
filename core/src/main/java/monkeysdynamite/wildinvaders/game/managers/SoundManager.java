@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 public class SoundManager {
 
     private Music gameMusic;
+    private Music menuMusic;
 
     private Sound hitPlayer;
     private Sound hitEnemy;
@@ -30,6 +31,9 @@ public class SoundManager {
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/musics/Mambo_Bambo.mp3"));
         gameMusic.setLooping(true);
 
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/musics/Forest adrenaline - Menu.mp3"));
+        menuMusic.setLooping(true);
+
         hitPlayer = Gdx.audio.newSound(Gdx.files.internal("sounds/sfx/Hit.wav"));
         hitEnemy = Gdx.audio.newSound(Gdx.files.internal("sounds/sfx/hitEnemy.wav"));
 
@@ -52,15 +56,40 @@ public class SoundManager {
         }
     }
 
+    public void playMenuMusic() {
+        if (!menuMusic.isPlaying()) {
+            menuMusic.play();
+            menuMusic.setVolume(0.25f);
+        }
+    }
+
     public void stopGameMusic() {
         if (gameMusic.isPlaying()) {
             gameMusic.stop();
         }
     }
 
+    public void stopMenuMusic() {
+        if (menuMusic.isPlaying()) {
+            menuMusic.stop();
+        }
+    }
+
     public void pauseGameMusic() {
         if (gameMusic.isPlaying()) {
             gameMusic.pause();
+        }
+    }
+
+    public void pauseMenuMusic() {
+        if (menuMusic.isPlaying()) {
+            menuMusic.pause();
+        }
+    }
+
+    public void resumeMenuMusic() {
+        if (!menuMusic.isPlaying()) {
+            menuMusic.play();
         }
     }
 

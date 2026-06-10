@@ -44,7 +44,7 @@ public class GameOverScreen implements Screen {
 
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-        
+
 
         Table table = new Table();
         table.setFillParent(true);
@@ -53,9 +53,16 @@ public class GameOverScreen implements Screen {
         float fontScale = GameConfig.isMobile ? 2.0f : 1.0f;
         float titleScale = GameConfig.isMobile ? 2.5f : 1.3f;
 
-        float buttonWidth = GameConfig.isMobile ? 700f : 300f;
-        float buttonHeight = GameConfig.isMobile ? 350f : 150f;
-                
+        float buttonWidth = GameConfig.isMobile ? 630f : 270f;
+        float buttonHeight = GameConfig.isMobile ? 270f : 150f;
+
+        float padTop = GameConfig.isMobile ? 15f : 10f;
+        float padBottom = GameConfig.isMobile ? 7f : 5f;
+
+        float padTopButton = GameConfig.isMobile ? -46f : -20f;
+        float padTopButton2 = GameConfig.isMobile ? -96f : -60f;
+        float padBottomButton = GameConfig.isMobile ? -50f : -25f;
+
 
         stage.addActor(table);
 
@@ -63,36 +70,40 @@ public class GameOverScreen implements Screen {
 
        Label.LabelStyle titleStyle = new Label.LabelStyle(game.assets.titleFont, null);
        Label.LabelStyle normalStyle = new Label.LabelStyle(game.assets.mediumFont, null);
+       Label.LabelStyle middleStyle = new Label.LabelStyle(game.assets.middleFont, null);
        Label.LabelStyle bigStyle = new Label.LabelStyle(game.assets.largeFont, null);
+       Label.LabelStyle largeSytle = new Label.LabelStyle(game.assets.titleFont, null);
 
-       Label gameOverLabel = new Label ("Game Over",bigStyle);
+       Label.LabelStyle font = GameConfig.isMobile ? largeSytle : middleStyle;
+
+       Label gameOverLabel = new Label ("Game Over", font);
 
         gameOverLabel.setFontScale(titleScale);
-        table.add(gameOverLabel).padTop(20);
+        table.add(gameOverLabel).padTop(padTop);
         table.row();
 
 
         //SCORE
-        Label scoreLabel = new Label("Score: ", bigStyle);
-        table.add(scoreLabel).padTop(10);
+        Label scoreLabel = new Label("Score: ", font);
+        table.add(scoreLabel).padTop(padTop);
         table.row();
 
-        Label finalScoreValue = new Label (String.valueOf(stats.finalScore), normalStyle);
-        table.add(finalScoreValue).padTop(10);
+        Label finalScoreValue = new Label (String.valueOf(stats.finalScore), font);
+        table.add(finalScoreValue).padTop(padTop);
         table.row();
 
 
-        Label highScoreLabel = new Label("High Score: ", bigStyle);
-        table.add(highScoreLabel).padTop(10);
+        Label highScoreLabel = new Label("High Score: ", font);
+        table.add(highScoreLabel).padTop(padTop);
         table.row();
 
-        Label highScoreValue = new Label(String.valueOf(game.highScore), normalStyle);
-        table.add(highScoreValue).padTop(10);
+        Label highScoreValue = new Label(String.valueOf(game.highScore), font);
+        table.add(highScoreValue).padTop(padTop);
         table.row();
 
         //TIMER
-        Label time = new Label("Total Time: ", bigStyle);
-        table.add(time).padTop(10);
+        Label time = new Label("Total Time: ", font);
+        table.add(time).padTop(padTop);
         table.row();
 
         int totalSeconds = (int) stats.totalGameTime;
@@ -100,24 +111,24 @@ public class GameOverScreen implements Screen {
         int seconds = totalSeconds % 60;
         String timeFormatted = String.format("%02d:%02d", minutes, seconds);
 
-        Label timeValue = new Label(timeFormatted, normalStyle);
-        table.add(timeValue).padTop(10);
+        Label timeValue = new Label(timeFormatted, font);
+        table.add(timeValue).padTop(padTop);
         table.row();
 
-        //STATS 
-        table.add(new Label("Wave Reached: " + stats.finalWave, normalStyle)).padBottom(5f).padTop(10);
+        //STATS
+        table.add(new Label("Wave Reached: " + stats.finalWave, font)).padBottom(padBottom).padTop(padTop);
         table.row();
 
-        table.add(new Label("Enemies Defeated: " + stats.totalEnemiesKilled, normalStyle)).padBottom(5f);
+        table.add(new Label("Enemies Defeated: " + stats.totalEnemiesKilled, font)).padBottom(padBottom);
         table.row();
 
-        table.add(new Label("Tractors: " + stats.tractorsKilled, normalStyle)).padBottom(5f);
+        table.add(new Label("Tractors: " + stats.tractorsKilled, font)).padBottom(padBottom);
         table.row();
 
-        table.add(new Label("Farmers: " + stats.farmersKilled, normalStyle)).padBottom(5f);
+        table.add(new Label("Farmers: " + stats.farmersKilled, font)).padBottom(padBottom);
         table.row();
 
-        table.add(new Label ("Miners: " + stats.minersKilled, normalStyle)).padBottom(5f);
+        table.add(new Label ("Miners: " + stats.minersKilled, font)).padBottom(padBottom);
         table.row();
 
 
@@ -127,10 +138,11 @@ public class GameOverScreen implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.sound.stopMenuMusic();
                 game.setScreen(new FirstScreen(game));
             }
         });
-        table.add(playButton).width(buttonWidth).height(buttonHeight).padTop(-20);
+        table.add(playButton).width(buttonWidth).height(buttonHeight).padTop(padTopButton);
         table.row();
 
         TextureRegionDrawable backDrawable = new TextureRegionDrawable(game.assets.exitButtonAnimation.getAnimation().getKeyFrame(0));
@@ -138,18 +150,20 @@ public class GameOverScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.sound.resumeMenuMusic();
                 game.setScreen(new MainMenuScreen(game));
             }
         });
         table.row();
-        table.add(backButton).width(buttonWidth).height(buttonHeight).padTop(-40);
+        table.add(backButton).width(buttonWidth).height(buttonHeight).padTop(padTopButton2).padBottom(padBottomButton);
+        game.sound.playMenuMusic();
+        
 
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -209,7 +223,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void hide() {
-
+        Gdx.input.setInputProcessor(null);
     }
 
     @Override
